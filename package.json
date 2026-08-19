@@ -26,19 +26,31 @@
     "pilot:status": "tsx scripts/pilot-status.ts",
     "pilot:revoke": "hardhat run scripts/pilot-revoke.ts --network whitechainIssuer",
     "indexer:sync": "tsx scripts/indexer-sync.ts",
-    "deploy:local": "hardhat ignition deploy ignition/modules/SovaNetworkProof.ts",
-    "deploy:whitechain": "hardhat ignition deploy ignition/modules/SovaNetworkProof.ts --network whitechainSepolia",
-    "deploy:registry:whitechain": "hardhat ignition deploy ignition/modules/SovaAttestationRegistry.ts --parameters ignition/parameters/whitechain-sepolia.json --network whitechainSepolia"
+    "deploy:local": "hardhat run scripts/deploy-network-proof.ts --build-profile production",
+    "deploy:registry:local": "hardhat run scripts/deploy-registry.ts --build-profile production",
+    "deploy:whitechain": "hardhat run scripts/deploy-network-proof.ts --build-profile production --network whitechainSepolia",
+    "deploy:registry:whitechain": "hardhat run scripts/deploy-registry.ts --build-profile production --network whitechainSepolia"
   },
   "devDependencies": {
-    "@nomicfoundation/hardhat-toolbox-mocha-ethers": "3.0.7",
+    "@nomicfoundation/hardhat-ethers": "4.0.15",
+    "@nomicfoundation/hardhat-ethers-chai-matchers": "3.0.11",
+    "@nomicfoundation/hardhat-keystore": "3.0.13",
+    "@nomicfoundation/hardhat-mocha": "3.1.0",
+    "@nomicfoundation/hardhat-typechain": "3.1.1",
     "@types/mocha": "10.0.10",
     "@types/node": "^24.0.0",
+    "chai": "6.2.2",
+    "ethers": "6.17.0",
     "hardhat": "3.13.0",
+    "mocha": "11.8.0",
     "solhint": "6.2.4",
     "typescript": "~5.8.0"
   },
   "engines": {
     "node": ">=22"
+  },
+  "overrides": {
+    "diff": "8.0.3",
+    "serialize-javascript": "7.0.5"
   }
 }

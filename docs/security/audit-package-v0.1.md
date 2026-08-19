@@ -23,6 +23,12 @@ journal records constructor arguments, transaction hashes, blocks, and receipts.
 Both deployed contracts are source-verified on the Whitechain Sepolia explorer
 using those exact Standard JSON compiler inputs.
 
+The Phase 0.9 production-profile rebuild produced registry runtime hash
+`0xe27ad1bdcb83dce01ccec1a218e6a0acef65c89d369a36bd38db986ebaa3b15b`,
+matching onchain bytecode exactly. Governance artifact hash
+`0x3bb4c73236c6f2b1842a565f60a4e2cf9e19ca5fd235890a0c4b3635797dbba8`
+matches onchain after normalizing the compiler-declared immutable slots.
+
 ## Reproduction
 
 ```bash

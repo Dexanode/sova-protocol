@@ -9,5 +9,5 @@
     "skipLibCheck": true,
     "types": ["node", "mocha"]
   },
-  "include": ["hardhat.config.ts", "ignition", "scripts", "src", "test"]
+  "include": ["hardhat.config.ts", "scripts", "src", "test"]
 }

@@ -22,15 +22,19 @@ Verdict: **CONDITIONALLY ENGINEERING-COMPLETE; PHASE 0 NOT CLOSED**
 
 1. **Independent audit pending.** No third-party report or remediation closure
    exists. This is the primary security blocker.
-2. **Development dependency advisories open.** Full npm audit reports 14
-   transitive dev-tool advisories. Production audit is clean, but the toolchain
-   risk must remain tracked and upgrades tested deliberately.
-
 ## Repository baseline
 
 The reviewed initial RC was committed as `9cd6b31` and pushed to the private
 `origin/main` branch. Generated disclosure/indexer data, deployment journals,
 environment files, and keystore material were excluded.
+
+## Dependency remediation
+
+The Hardhat toolbox was replaced by minimal required plugins and patched
+transitive overrides. Clean `npm ci` and full `npm audit` now report zero known
+vulnerabilities across 299 packages. Production artifact comparison confirmed
+the registry runtime matches onchain bytecode exactly; governance matches after
+normalizing its compiler-declared immutable slots.
 
 ## Phase transition rule
 

@@ -5,21 +5,18 @@ Date: 2026-08-19
 ## Results
 
 - `npm audit --omit=dev`: **0 vulnerabilities**
-- `npm audit`: **14 transitive development-tool advisories**
-  (`12 low`, `1 moderate`, `1 high`)
+- `npm audit`: **0 vulnerabilities**
 
-The advisories are in the Hardhat/Mocha/Ignition development dependency graph,
-including `diff`, `serialize-javascript`, and the ethers-v5 `elliptic` chain
-pulled by verification tooling. There are no production npm dependencies in the
-current package.
+The original toolchain reported 14 transitive advisories. Patched overrides for
+`diff` and `serialize-javascript` removed the High and Moderate findings. The
+monolithic toolbox was then replaced with the minimal ethers, chai-matchers,
+keystore, mocha, and typechain plugins, eliminating the unused Ignition/Verify
+ethers-v5 `elliptic` chain. A clean install now audits 299 packages with zero
+known vulnerabilities. There are no production npm dependencies.
 
 ## Decision
 
-Do not run a blind `npm audit fix` during release-candidate freeze. Dependency
-changes can alter compiler, deployment, verification, or test behavior and must
-pass the complete release gate. Track upstream Hardhat/toolbox releases and
-upgrade in a dedicated branch with clean-build, test, bytecode, and verification
-comparisons.
-
-This decision does not waive the advisories. CI must not process untrusted patch
-or serialized JavaScript inputs through vulnerable development utilities.
+Deployment tooling now uses explicit ethers scripts and the production compiler
+profile. The migration passed clean install, clean production build, type-check,
+lint, 21 tests, and deployed-runtime bytecode comparison. Future dependency
+changes must repeat those gates rather than use a blind `npm audit fix`.
