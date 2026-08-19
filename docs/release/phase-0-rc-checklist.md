@@ -11,7 +11,7 @@
 - [x] Active-to-revoked pilot attestation lifecycle
 - [x] Read-only SDK and confirmed event indexer
 - [x] Operator and incident-response runbooks
-- [ ] Repository baseline committed and pushed to the intended remote
+- [x] Repository baseline committed and pushed to private `origin/main`
 - [ ] Independent audit completed and report hash recorded
 - [ ] Required audit remediations independently verified
 
