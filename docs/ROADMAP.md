@@ -13,10 +13,16 @@
 - Phase 0.6 — explorer verification, audit package, and first schema activation completed
 - Phase 0.7 — pilot issuer authorization and full attestation lifecycle validated on testnet
 - Phase 0.8 — confirmed event indexer and read-only verification SDK completed
+- Phase 0.9 — internal release review, zero-advisory toolchain remediation, runbooks, and private RC baseline completed
+- Phase 1.1 — testnet consumer policy evaluator and read API contract frozen
 
 ## Next
 
-- Phase 0.9 — internal release review and runbooks complete; independent audit/remediation and versioned repository baseline remain open
+- Phase 1.2 — persistent indexer and query API implementation
+
+## Deferred production gate
+
+- Independent contract audit, required remediation, report hash, and final Phase 0 production-readiness freeze
 
 Deployment is intentionally separated from protocol design: the proof contract
 validates the toolchain and network path without prematurely committing SOVA to

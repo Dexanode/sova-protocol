@@ -1,0 +1,81 @@
+openapi: 3.1.0
+info:
+  title: SOVA Read API
+  version: 0.1.0
+  description: Testnet read and disclosure-verification API. The registry remains authoritative.
+servers:
+  - url: http://localhost:3000
+paths:
+  /v1/attestations/{attestationId}:
+    get:
+      summary: Read an attestation and its current lifecycle status
+      parameters:
+        - in: path
+          name: attestationId
+          required: true
+          schema: { type: string, pattern: '^0x[0-9a-fA-F]{64}$' }
+      responses:
+        '200':
+          description: Current registry-backed attestation view
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/AttestationView' }
+        '404': { description: Attestation not found }
+        '503': { description: Authoritative RPC unavailable }
+  /v1/schemas/{schemaId}:
+    get:
+      summary: Read immutable schema metadata and active state
+      parameters:
+        - in: path
+          name: schemaId
+          required: true
+          schema: { type: string, pattern: '^0x[0-9a-fA-F]{64}$' }
+      responses:
+        '200': { description: Schema view }
+        '404': { description: Schema not found }
+        '503': { description: Authoritative RPC unavailable }
+  /v1/verify-disclosure:
+    post:
+      summary: Verify a disclosed encoded payload and salt against an attestation
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: false
+              required: [attestationId, encodedPayload, salt]
+              properties:
+                attestationId: { type: string, pattern: '^0x[0-9a-fA-F]{64}$' }
+                encodedPayload: { type: string, pattern: '^0x([0-9a-fA-F]{2})*$' }
+                salt: { type: string, pattern: '^0x[0-9a-fA-F]{64}$' }
+      responses:
+        '200':
+          description: Commitment verification result
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [matches]
+                properties: { matches: { type: boolean } }
+        '400': { description: Invalid request encoding }
+        '404': { description: Attestation not found }
+        '503': { description: Authoritative RPC unavailable }
+components:
+  schemas:
+    AttestationView:
+      type: object
+      required: [attestationId, subjectId, schemaId, dataHash, issuer, issuedAt, expiresAt, issuerEpoch, revokedAt, status, usable]
+      properties:
+        attestationId: { type: string }
+        subjectId: { type: string }
+        schemaId: { type: string }
+        dataHash: { type: string }
+        issuer: { type: string }
+        issuedAt: { type: string, description: uint64 decimal string }
+        expiresAt: { type: string, description: uint64 decimal string }
+        issuerEpoch: { type: string, description: uint64 decimal string }
+        revokedAt: { type: string, description: uint64 decimal string }
+        revocationReason: { type: string }
+        status: { type: string, enum: [NONE, ACTIVE, EXPIRED, REVOKED, ISSUER_SUSPENDED, ISSUER_INACTIVE, ISSUER_REVOKED, SCHEMA_INACTIVE] }
+        usable: { type: boolean }
