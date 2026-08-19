@@ -9,4 +9,5 @@ ignition/deployments/
 *.log
 pilot-data/
 indexer-data/
+issuer-data/
 .DS_Store

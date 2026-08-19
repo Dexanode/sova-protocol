@@ -16,10 +16,11 @@
 - Phase 0.9 — internal release review, zero-advisory toolchain remediation, runbooks, and private RC baseline completed
 - Phase 1.1 — testnet consumer policy evaluator and read API contract frozen
 - Phase 1.2 — persistent reorg-aware SQLite indexer and registry-refreshed query API completed
+- Phase 1.3 — isolated issuer EIP-712 signing and untrusted relayer submission validated on testnet
 
 ## Next
 
-- Phase 1.3 — issuer service, relayed EIP-712 issuance, and key isolation
+- Phase 1.4 — testnet verification dashboard and consumer-policy demo
 
 ## Deferred production gate
 
