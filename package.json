@@ -26,6 +26,7 @@
     "pilot:status": "tsx scripts/pilot-status.ts",
     "pilot:revoke": "hardhat run scripts/pilot-revoke.ts --network whitechainIssuer",
     "indexer:sync": "tsx scripts/indexer-sync.ts",
+    "api:start": "tsx scripts/api-server.ts",
     "deploy:local": "hardhat run scripts/deploy-network-proof.ts --build-profile production",
     "deploy:registry:local": "hardhat run scripts/deploy-registry.ts --build-profile production",
     "deploy:whitechain": "hardhat run scripts/deploy-network-proof.ts --build-profile production --network whitechainSepolia",

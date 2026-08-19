@@ -6,6 +6,25 @@ info:
 servers:
   - url: http://localhost:3000
 paths:
+  /health:
+    get:
+      summary: Read service and index checkpoint health
+      responses:
+        '200': { description: Service health }
+  /v1/subjects/{subjectId}/attestations:
+    get:
+      summary: Discover subject attestations from the index and refresh lifecycle from the registry
+      parameters:
+        - in: path
+          name: subjectId
+          required: true
+          schema: { type: string, pattern: '^0x[0-9a-fA-F]{64}$' }
+        - in: query
+          name: limit
+          schema: { type: integer, minimum: 1, maximum: 100, default: 50 }
+      responses:
+        '200': { description: Registry-refreshed attestation list }
+        '503': { description: Authoritative RPC unavailable }
   /v1/attestations/{attestationId}:
     get:
       summary: Read an attestation and its current lifecycle status

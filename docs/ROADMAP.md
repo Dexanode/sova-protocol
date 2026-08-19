@@ -15,10 +15,11 @@
 - Phase 0.8 — confirmed event indexer and read-only verification SDK completed
 - Phase 0.9 — internal release review, zero-advisory toolchain remediation, runbooks, and private RC baseline completed
 - Phase 1.1 — testnet consumer policy evaluator and read API contract frozen
+- Phase 1.2 — persistent reorg-aware SQLite indexer and registry-refreshed query API completed
 
 ## Next
 
-- Phase 1.2 — persistent indexer and query API implementation
+- Phase 1.3 — issuer service, relayed EIP-712 issuance, and key isolation
 
 ## Deferred production gate
 

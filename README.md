@@ -27,6 +27,20 @@ npm run build
 npm test
 ```
 
+## Testnet read service
+
+Build or incrementally refresh the confirmed SQLite event index, then start the
+loopback-only query API:
+
+```bash
+npm run indexer:sync
+npm run api:start
+```
+
+The API contract is documented in `docs/api/openapi-v0.1.yaml`. Indexed data is
+for discovery; security-sensitive lifecycle decisions are refreshed directly
+from the registry.
+
 ## Whitechain Sepolia deployment
 
 Whitechain Sepolia is EVM-compatible. This project uses:

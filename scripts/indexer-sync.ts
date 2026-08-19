@@ -1,11 +1,12 @@
-import { mkdirSync, writeFileSync } from "node:fs";
 import { Interface, JsonRpcProvider } from "ethers";
 import { SOVA_REGISTRY_ADDRESS } from "../src/SovaReadClient.js";
+import { RegistryIndex, type IndexedEvent } from "../src/indexer/RegistryIndex.js";
 
 const DEPLOYMENT_BLOCK = 5_489_891;
 const CONFIRMATIONS = 6;
 const BLOCK_CHUNK_SIZE = 5_000;
-const OUTPUT = "indexer-data/whitechain-sepolia.json";
+const REORG_REWIND = 20;
+const DATABASE = "indexer-data/whitechain-sepolia.sqlite";
 const rpc = process.env.WHITECHAIN_SEPOLIA_RPC_URL ?? "https://rpc.testnet.whitechain.io";
 const provider = new JsonRpcProvider(rpc, 1874, { staticNetwork: true });
 const registry = new Interface([
@@ -18,8 +19,11 @@ const registry = new Interface([
 
 const latest = await provider.getBlockNumber();
 const finalizedBlock = latest - CONFIRMATIONS;
+const index = new RegistryIndex(DATABASE);
+const previous = index.getIndexedThrough();
+const syncFrom = Math.max(DEPLOYMENT_BLOCK, (previous ?? DEPLOYMENT_BLOCK) - REORG_REWIND + 1);
 const logs = [];
-for (let fromBlock = DEPLOYMENT_BLOCK; fromBlock <= finalizedBlock; fromBlock += BLOCK_CHUNK_SIZE) {
+for (let fromBlock = syncFrom; fromBlock <= finalizedBlock; fromBlock += BLOCK_CHUNK_SIZE) {
   const toBlock = Math.min(fromBlock + BLOCK_CHUNK_SIZE - 1, finalizedBlock);
   logs.push(
     ...(await provider.getLogs({
@@ -29,11 +33,12 @@ for (let fromBlock = DEPLOYMENT_BLOCK; fromBlock <= finalizedBlock; fromBlock +=
     })),
   );
 }
-const events = logs.flatMap((log) => {
+const events: IndexedEvent[] = logs.flatMap((log) => {
   const parsed = registry.parseLog(log);
   if (parsed === null) return [];
   return [{
     blockNumber: log.blockNumber,
+    blockHash: log.blockHash,
     transactionHash: log.transactionHash,
     logIndex: log.index,
     name: parsed.name,
@@ -45,19 +50,10 @@ const events = logs.flatMap((log) => {
   }];
 });
 
-const output = {
-  version: 1,
-  chainId: 1874,
-  registry: SOVA_REGISTRY_ADDRESS,
-  deploymentBlock: DEPLOYMENT_BLOCK,
-  confirmations: CONFIRMATIONS,
-  blockChunkSize: BLOCK_CHUNK_SIZE,
-  indexedThrough: finalizedBlock,
-  eventCount: events.length,
-  events,
-};
-mkdirSync("indexer-data", { recursive: true });
-writeFileSync(OUTPUT, `${JSON.stringify(output, null, 2)}\n`, "utf8");
+index.replaceFromBlock(syncFrom, events, finalizedBlock);
 console.log(`indexed_through=${finalizedBlock}`);
-console.log(`event_count=${events.length}`);
-console.log(`output=${OUTPUT}`);
+console.log(`sync_from=${syncFrom}`);
+console.log(`fetched_events=${events.length}`);
+console.log(`stored_events=${index.countEvents()}`);
+console.log(`database=${DATABASE}`);
+index.close();

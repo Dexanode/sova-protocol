@@ -14,4 +14,7 @@ deployment on each run, making the initial implementation deterministic and
 simple to recover. Incremental checkpoints and a database can be introduced
 after the event projection is validated.
 
-The generated `indexer-data/` directory is local and excluded from Git.
+Phase 1.2 replaces the JSON projection with an incremental SQLite index. Each
+sync rewinds 20 blocks, deletes potentially reorganized events, refetches in
+5,000-block chunks, and transactionally rebuilds projections. The generated
+`indexer-data/` directory is local and excluded from Git.
