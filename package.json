@@ -1,0 +1,44 @@
+{
+  "name": "sova-protocol",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "SOVA — verifiable reputation for onchain finance",
+  "scripts": {
+    "build": "hardhat build",
+    "test": "hardhat test",
+    "typecheck": "tsc --noEmit",
+    "lint:sol": "solhint contracts/**/*.sol",
+    "test:solidity": "hardhat test solidity",
+    "clean": "hardhat clean",
+    "preflight:whitechain": "hardhat run scripts/preflight.ts --network whitechainSepolia",
+    "prepare:schema-activation": "tsx scripts/prepare-schema-activation.ts",
+    "verify:whitechain": "tsx scripts/verify-explorer.ts",
+    "schema:status": "tsx scripts/schema-status.ts",
+    "schema:propose": "hardhat run scripts/schema-propose.ts --network whitechainSigner1",
+    "schema:approve": "hardhat run scripts/schema-approve.ts --network whitechainSigner2",
+    "schema:execute": "hardhat run scripts/schema-execute.ts --network whitechainSigner1",
+    "issuer:status": "tsx scripts/issuer-status.ts",
+    "issuer:propose": "hardhat run scripts/issuer-propose.ts --network whitechainSigner1",
+    "issuer:approve": "hardhat run scripts/issuer-approve.ts --network whitechainSigner2",
+    "issuer:execute": "hardhat run scripts/issuer-execute.ts --network whitechainSigner1",
+    "pilot:issue": "hardhat run scripts/pilot-issue.ts --network whitechainIssuer",
+    "pilot:status": "tsx scripts/pilot-status.ts",
+    "pilot:revoke": "hardhat run scripts/pilot-revoke.ts --network whitechainIssuer",
+    "indexer:sync": "tsx scripts/indexer-sync.ts",
+    "deploy:local": "hardhat ignition deploy ignition/modules/SovaNetworkProof.ts",
+    "deploy:whitechain": "hardhat ignition deploy ignition/modules/SovaNetworkProof.ts --network whitechainSepolia",
+    "deploy:registry:whitechain": "hardhat ignition deploy ignition/modules/SovaAttestationRegistry.ts --parameters ignition/parameters/whitechain-sepolia.json --network whitechainSepolia"
+  },
+  "devDependencies": {
+    "@nomicfoundation/hardhat-toolbox-mocha-ethers": "3.0.7",
+    "@types/mocha": "10.0.10",
+    "@types/node": "^24.0.0",
+    "hardhat": "3.13.0",
+    "solhint": "6.2.4",
+    "typescript": "~5.8.0"
+  },
+  "engines": {
+    "node": ">=22"
+  }
+}

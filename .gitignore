@@ -1,0 +1,12 @@
+node_modules/
+artifacts/
+cache/
+coverage/
+typechain-types/
+types/
+ignition/deployments/
+.env
+*.log
+pilot-data/
+indexer-data/
+.DS_Store
