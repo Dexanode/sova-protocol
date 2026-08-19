@@ -1,5 +1,7 @@
 import { createServer, type IncomingMessage, type ServerResponse } from "node:http";
-import { JsonRpcProvider } from "ethers";
+import { readFileSync } from "node:fs";
+import { extname, join } from "node:path";
+import { JsonRpcProvider, getAddress } from "ethers";
 import {
   AttestationStatus,
   SOVA_REGISTRY_ADDRESS,
@@ -7,6 +9,7 @@ import {
   verifyDisclosure,
 } from "../src/SovaReadClient.js";
 import { RegistryIndex } from "../src/indexer/RegistryIndex.js";
+import { evaluateAttestation, type ConsumerPolicy } from "../src/ConsumerPolicy.js";
 
 const PORT = Number(process.env.PORT ?? "3000");
 const HOST = process.env.HOST ?? "127.0.0.1";
@@ -17,13 +20,36 @@ const client = new SovaReadClient(provider);
 const index = new RegistryIndex(DATABASE);
 const bytes32Pattern = /^0x[0-9a-fA-F]{64}$/;
 const bytesPattern = /^0x(?:[0-9a-fA-F]{2})*$/;
+const DASHBOARD_DIRECTORY = "dashboard";
+
+const securityHeaders = {
+  "x-content-type-options": "nosniff",
+  "referrer-policy": "no-referrer",
+  "content-security-policy": "default-src 'self'; connect-src 'self'; img-src 'self' data:; style-src 'self'; script-src 'self'; base-uri 'none'; frame-ancestors 'none'; form-action 'self'",
+};
 
 function json(response: ServerResponse, status: number, body: unknown): void {
   response.writeHead(status, {
+    ...securityHeaders,
     "content-type": "application/json; charset=utf-8",
     "cache-control": "no-store",
   });
   response.end(`${JSON.stringify(body)}\n`);
+}
+
+function staticFile(response: ServerResponse, file: string): void {
+  const types: Record<string, string> = {
+    ".html": "text/html; charset=utf-8",
+    ".css": "text/css; charset=utf-8",
+    ".js": "text/javascript; charset=utf-8",
+  };
+  const body = readFileSync(join(DASHBOARD_DIRECTORY, file));
+  response.writeHead(200, {
+    ...securityHeaders,
+    "content-type": types[extname(file)] ?? "application/octet-stream",
+    "cache-control": file.endsWith(".html") ? "no-store" : "public, max-age=300",
+  });
+  response.end(body);
 }
 
 async function readJson(request: IncomingMessage): Promise<unknown> {
@@ -53,6 +79,18 @@ function serializeAttestation(attestationId: string, value: Awaited<ReturnType<S
 const server = createServer(async (request, response) => {
   try {
     const url = new URL(request.url ?? "/", `http://${request.headers.host ?? "localhost"}`);
+    if (request.method === "GET" && url.pathname === "/") {
+      staticFile(response, "index.html");
+      return;
+    }
+    if (request.method === "GET" && url.pathname === "/dashboard.css") {
+      staticFile(response, "dashboard.css");
+      return;
+    }
+    if (request.method === "GET" && url.pathname === "/dashboard.js") {
+      staticFile(response, "dashboard.js");
+      return;
+    }
     if (request.method === "GET" && url.pathname === "/health") {
       json(response, 200, {
         ok: true,
@@ -129,6 +167,74 @@ const server = createServer(async (request, response) => {
       } catch {
         json(response, 404, { error: "ATTESTATION_NOT_FOUND" });
       }
+      return;
+    }
+
+    if (request.method === "POST" && url.pathname === "/v1/evaluate") {
+      const body = await readJson(request);
+      if (typeof body !== "object" || body === null) {
+        json(response, 400, { error: "INVALID_REQUEST" });
+        return;
+      }
+      const input = body as Record<string, unknown>;
+      const policyInput = input.policy;
+      if (
+        typeof input.attestationId !== "string" || !bytes32Pattern.test(input.attestationId)
+        || typeof policyInput !== "object" || policyInput === null
+      ) {
+        json(response, 400, { error: "INVALID_REQUEST" });
+        return;
+      }
+      const rawPolicy = policyInput as Record<string, unknown>;
+      if (
+        typeof rawPolicy.schemaId !== "string" || !bytes32Pattern.test(rawPolicy.schemaId)
+        || !Array.isArray(rawPolicy.acceptedIssuers) || rawPolicy.acceptedIssuers.length > 20
+        || !rawPolicy.acceptedIssuers.every((issuer) => typeof issuer === "string")
+        || typeof rawPolicy.maxAgeSeconds !== "string" || !/^\d+$/.test(rawPolicy.maxAgeSeconds)
+        || typeof rawPolicy.requireDisclosure !== "boolean"
+      ) {
+        json(response, 400, { error: "INVALID_POLICY" });
+        return;
+      }
+      let acceptedIssuers: string[];
+      try {
+        acceptedIssuers = rawPolicy.acceptedIssuers.map((issuer) => getAddress(issuer as string));
+      } catch {
+        json(response, 400, { error: "INVALID_ISSUER" });
+        return;
+      }
+      const maxAgeSeconds = BigInt(rawPolicy.maxAgeSeconds);
+      if (maxAgeSeconds === 0n || maxAgeSeconds > 365n * 24n * 60n * 60n) {
+        json(response, 400, { error: "INVALID_MAX_AGE" });
+        return;
+      }
+      const disclosureInput = input.disclosure;
+      const disclosure =
+        typeof disclosureInput === "object" && disclosureInput !== null
+        && "encodedPayload" in disclosureInput && "salt" in disclosureInput
+        && typeof disclosureInput.encodedPayload === "string"
+        && bytesPattern.test(disclosureInput.encodedPayload)
+        && typeof disclosureInput.salt === "string" && bytes32Pattern.test(disclosureInput.salt)
+          ? { encodedPayload: disclosureInput.encodedPayload, salt: disclosureInput.salt }
+          : undefined;
+      const [attestation, block] = await Promise.all([
+        client.getAttestation(input.attestationId),
+        provider.getBlock("latest"),
+      ]);
+      if (block === null) throw new Error("Latest block unavailable");
+      const policy: ConsumerPolicy = {
+        chainId: 1874n,
+        registryAddress: SOVA_REGISTRY_ADDRESS,
+        schemaId: rawPolicy.schemaId,
+        acceptedIssuers,
+        maxAgeSeconds,
+        requireDisclosure: rawPolicy.requireDisclosure,
+      };
+      json(response, 200, evaluateAttestation(attestation, policy, {
+        chainId: 1874n,
+        registryAddress: SOVA_REGISTRY_ADDRESS,
+        now: BigInt(block.timestamp),
+      }, disclosure));
       return;
     }
 

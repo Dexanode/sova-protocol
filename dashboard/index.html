@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="color-scheme" content="dark">
+    <title>SOVA Testnet Verifier</title>
+    <link rel="stylesheet" href="/dashboard.css">
+    <script src="/dashboard.js" defer></script>
+  </head>
+  <body>
+    <header class="topbar">
+      <a class="brand" href="/" aria-label="SOVA verifier home">
+        <span class="brand-mark" aria-hidden="true">S</span>
+        <span>SOVA</span>
+      </a>
+      <div class="network"><span aria-hidden="true"></span> Whitechain Sepolia · 1874</div>
+    </header>
+
+    <main>
+      <section class="hero" aria-labelledby="page-title">
+        <p class="eyebrow">Verifiable reputation infrastructure</p>
+        <h1 id="page-title">Inspect trust.<br><em>Decide explicitly.</em></h1>
+        <p class="hero-copy">Read registry-backed attestations and test a consumer policy without turning reputation into a universal score.</p>
+      </section>
+
+      <section class="search-panel" aria-labelledby="search-title">
+        <div class="section-heading">
+          <div>
+            <p class="step">01 · Discover</p>
+            <h2 id="search-title">Find an attestation</h2>
+          </div>
+          <p id="index-health" class="health">Checking index…</p>
+        </div>
+        <form id="lookup-form">
+          <label for="lookup-kind">Lookup by</label>
+          <div class="search-row">
+            <select id="lookup-kind" name="kind">
+              <option value="attestation">Attestation ID</option>
+              <option value="subject">Subject ID</option>
+            </select>
+            <input id="lookup-value" name="value" spellcheck="false" autocomplete="off" aria-describedby="lookup-help">
+            <button type="submit">Inspect</button>
+          </div>
+          <p id="lookup-help" class="field-help">Public identifiers only. Never paste private keys, salts, or disclosure payloads here.</p>
+        </form>
+        <p id="lookup-error" class="error" role="alert" hidden></p>
+      </section>
+
+      <section id="result-section" class="result-grid" aria-live="polite" hidden>
+        <article class="attestation-panel">
+          <div class="section-heading">
+            <div>
+              <p class="step">02 · Verify</p>
+              <h2>Registry state</h2>
+            </div>
+            <span id="status-badge" class="status-badge">—</span>
+          </div>
+          <dl class="facts">
+            <div><dt>Attestation</dt><dd id="fact-attestation"></dd></div>
+            <div><dt>Issuer</dt><dd id="fact-issuer"></dd></div>
+            <div><dt>Schema</dt><dd id="fact-schema"></dd></div>
+            <div><dt>Subject</dt><dd id="fact-subject"></dd></div>
+            <div><dt>Issued</dt><dd id="fact-issued"></dd></div>
+            <div><dt>Expires</dt><dd id="fact-expires"></dd></div>
+          </dl>
+          <div class="provenance-line">
+            <span id="usable-indicator" aria-hidden="true"></span>
+            <p id="usable-copy"></p>
+          </div>
+        </article>
+
+        <aside class="policy-panel" aria-labelledby="policy-title">
+          <p class="step">03 · Decide</p>
+          <h2 id="policy-title">Consumer policy</h2>
+          <label for="policy-issuer">Accepted issuer</label>
+          <input id="policy-issuer" spellcheck="false">
+          <label for="policy-age">Maximum claim age</label>
+          <select id="policy-age">
+            <option value="86400">24 hours</option>
+            <option value="604800">7 days</option>
+            <option value="2592000" selected>30 days</option>
+          </select>
+          <label class="check-row" for="policy-disclosure">
+            <input id="policy-disclosure" type="checkbox">
+            Require private disclosure
+          </label>
+          <button id="evaluate-button" type="button">Evaluate policy</button>
+          <div id="decision" class="decision" hidden>
+            <strong id="decision-title"></strong>
+            <p id="decision-reasons"></p>
+          </div>
+          <p class="policy-note">A pass means this explicit testnet policy accepted the current claim. It is not a credit score or production decision.</p>
+        </aside>
+      </section>
+    </main>
+
+    <footer>
+      <span>SOVA testnet reference interface</span>
+      <span>Contract state is authoritative · Audit deferred</span>
+    </footer>
+  </body>
+</html>

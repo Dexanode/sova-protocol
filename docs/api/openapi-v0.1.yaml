@@ -80,6 +80,42 @@ paths:
         '400': { description: Invalid request encoding }
         '404': { description: Attestation not found }
         '503': { description: Authoritative RPC unavailable }
+  /v1/evaluate:
+    post:
+      summary: Evaluate current registry state against an explicit consumer policy
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: false
+              required: [attestationId, policy]
+              properties:
+                attestationId: { type: string, pattern: '^0x[0-9a-fA-F]{64}$' }
+                policy:
+                  type: object
+                  required: [schemaId, acceptedIssuers, maxAgeSeconds, requireDisclosure]
+                  properties:
+                    schemaId: { type: string, pattern: '^0x[0-9a-fA-F]{64}$' }
+                    acceptedIssuers:
+                      type: array
+                      maxItems: 20
+                      items: { type: string, pattern: '^0x[0-9a-fA-F]{40}$' }
+                    maxAgeSeconds: { type: string, pattern: '^[0-9]+$' }
+                    requireDisclosure: { type: boolean }
+                disclosure:
+                  type: object
+                  required: [encodedPayload, salt]
+                  properties:
+                    encodedPayload: { type: string, pattern: '^0x([0-9a-fA-F]{2})*$' }
+                    salt: { type: string, pattern: '^0x[0-9a-fA-F]{64}$' }
+      responses:
+        '200':
+          description: Explicit policy decision and machine-readable rejection reasons
+        '400': { description: Invalid request or policy }
+        '404': { description: Attestation not found }
+        '503': { description: Authoritative RPC unavailable }
 components:
   schemas:
     AttestationView:

@@ -17,10 +17,11 @@
 - Phase 1.1 — testnet consumer policy evaluator and read API contract frozen
 - Phase 1.2 — persistent reorg-aware SQLite indexer and registry-refreshed query API completed
 - Phase 1.3 — isolated issuer EIP-712 signing and untrusted relayer submission validated on testnet
+- Phase 1.4 — testnet verification dashboard and explicit consumer-policy demo completed
 
 ## Next
 
-- Phase 1.4 — testnet verification dashboard and consumer-policy demo
+- Phase 1.5 — testnet pilot observability, API hardening, and operational validation
 
 ## Deferred production gate
 
