@@ -82,10 +82,10 @@ export default function Home() {
 
       {/* ── Nav ── */}
       <header style={{ position: "relative", zIndex: 10, maxWidth: 1100, margin: "0 auto",
-        padding: "26px 24px", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+        padding: "20px 20px", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
         <img src="/assets/sova-gradient.png" alt="SOVA Protocol"
           style={{ height: 18, width: "auto", objectFit: "contain", display: "block" }} />
-        <div style={{ display: "flex", alignItems: "center", gap: 7, padding: "5px 14px",
+        <div style={{ display: "flex", alignItems: "center", gap: 7, padding: "5px 12px",
           borderRadius: 9999, border: "1px solid rgba(0,0,0,0.09)", background: "rgba(255,255,255,0.9)",
           fontFamily: "var(--font-mono)", fontSize: 10, letterSpacing: "0.14em", textTransform: "uppercase", color: TXT3 }}>
           <span style={{ width: 6, height: 6, borderRadius: "50%", background: "#16a34a" }} />
@@ -94,80 +94,81 @@ export default function Home() {
       </header>
 
       {/* ══════════════════════════════════════════
-          01. HERO — Strategic Alignment & Identity Thesis
+          01. HERO — Split on Desktop, Stack on Mobile
       ══════════════════════════════════════════ */}
       <section style={{ position: "relative", zIndex: 5, maxWidth: 1100, margin: "0 auto",
-        padding: "64px 24px 80px", display: "grid", gridTemplateColumns: "1fr 1fr",
-        gap: 56, alignItems: "center" }}>
+        padding: "48px 20px 64px" }}>
+        
+        <div className="grid-hero">
+          {/* Left — text + form */}
+          <div style={{ display: "flex", flexDirection: "column", gap: 20 }}>
+            <div style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "4px 14px",
+              borderRadius: 9999, border: "1px solid rgba(61,111,255,0.18)", background: "rgba(61,111,255,0.04)",
+              fontFamily: "var(--font-mono)", fontSize: 10, fontWeight: 700,
+              letterSpacing: "0.16em", textTransform: "uppercase", color: BLUE, width: "fit-content" }}>
+              Whitechain Reputation Primitive
+            </div>
 
-        {/* Left — text + form */}
-        <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>
-          <div style={{ display: "inline-flex", alignItems: "center", gap: 8, padding: "4px 14px",
-            borderRadius: 9999, border: "1px solid rgba(61,111,255,0.18)", background: "rgba(61,111,255,0.04)",
-            fontFamily: "var(--font-mono)", fontSize: 10, fontWeight: 700,
-            letterSpacing: "0.16em", textTransform: "uppercase", color: BLUE, width: "fit-content" }}>
-            Whitechain Reputation Primitive
-          </div>
-
-          <h1 style={{ fontFamily: "var(--font-display)", fontWeight: 800,
-            fontSize: "clamp(38px,4.3vw,56px)", letterSpacing: "-0.035em",
-            lineHeight: 1.06, color: TXT, margin: 0 }}>
-            <span className="clip-reveal">
-              <span className="slide-up" style={{ display: "block" }}>Identity proves who you are.</span>
-            </span>
-            <span className="clip-reveal">
-              <span className="slide-up-2" style={{ display: "block",
-                backgroundImage: `linear-gradient(90deg,${BLUE} 0%,#6366f1 55%,#8b5cf6 100%)`,
-                WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
-                Reputation makes it actionable.
+            <h1 style={{ fontFamily: "var(--font-display)", fontWeight: 800,
+              fontSize: "clamp(34px, 4.3vw, 56px)", letterSpacing: "-0.035em",
+              lineHeight: 1.06, color: TXT, margin: 0 }}>
+              <span className="clip-reveal">
+                <span className="slide-up" style={{ display: "block" }}>Identity proves who you are.</span>
               </span>
-            </span>
-          </h1>
-
-          <p style={{ fontFamily: "var(--font-sans)", fontSize: 16, color: TXT2,
-            lineHeight: 1.72, maxWidth: 480, margin: 0 }}>
-            SOVA is the verifiable reputation layer for Whitechain L2 — turning WB Soul identities and historical onchain behavior into machine-readable attestations for DeFi, lending, and rewards. Zero additional KYC required.
-          </p>
-
-          {/* Waitlist Form */}
-          <div style={{ display: "flex", flexDirection: "column", gap: 8, maxWidth: 420 }}>
-            <form onSubmit={submit} style={{ display: "flex", gap: 6, padding: 5,
-              borderRadius: 13, border: "1px solid rgba(0,0,0,0.1)",
-              background: "#fff", boxShadow: "0 1px 4px rgba(0,0,0,0.06)" }}>
-              <input type="text" value={email} onChange={e => setEmail(e.target.value)}
-                placeholder="your@email.com"
-                style={{ flex: 1, background: "transparent", border: "none", outline: "none",
-                  padding: "10px 14px", fontSize: 14, color: TXT, fontFamily: "var(--font-sans)" }} />
-              <button type="submit" disabled={busy}
-                style={{ padding: "10px 22px", borderRadius: 9, border: "none",
-                  background: BLUE, color: "#fff", fontFamily: "var(--font-sans)",
-                  fontSize: 13, fontWeight: 600, cursor: "pointer",
-                  opacity: busy ? 0.6 : 1, whiteSpace: "nowrap" }}>
-                {busy ? "Joining…" : "Join Waitlist"}
-              </button>
-            </form>
-            {msg && (
-              <p style={{ fontFamily: "var(--font-mono)", fontSize: 11, textAlign: "center",
-                margin: 0, color: msgOk ? "#16a34a" : "#dc2626" }}>{msg}</p>
-            )}
-          </div>
-
-          {/* Trust pills */}
-          <div style={{ display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap" }}>
-            {["WB Soul Native", "3 Smart Contracts Live", "Whitechain Sepolia"].map((t, i) => (
-              <span key={t} style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                {i > 0 && <span style={{ color: "#E5E7EB", fontSize: 12 }}>·</span>}
-                <span style={{ fontFamily: "var(--font-mono)", fontSize: 10,
-                  color: TXT3, letterSpacing: "0.1em", textTransform: "uppercase" }}>{t}</span>
+              <span className="clip-reveal">
+                <span className="slide-up-2" style={{ display: "block",
+                  backgroundImage: `linear-gradient(90deg,${BLUE} 0%,#6366f1 55%,#8b5cf6 100%)`,
+                  WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
+                  Reputation makes it actionable.
+                </span>
               </span>
-            ))}
-          </div>
-        </div>
+            </h1>
 
-        {/* Right — 3D floating attestation receipt */}
-        <div style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
-          <div style={{ perspective: 1200, width: "100%", maxWidth: 330 }}>
-            <AttestationReceipt score={820} isHeroPreview />
+            <p style={{ fontFamily: "var(--font-sans)", fontSize: 15, color: TXT2,
+              lineHeight: 1.68, maxWidth: 480, margin: 0 }}>
+              SOVA is the verifiable reputation layer for Whitechain L2 — turning WB Soul identities and historical onchain behavior into machine-readable attestations for DeFi, lending, and rewards. Zero additional KYC required.
+            </p>
+
+            {/* Waitlist Form */}
+            <div style={{ display: "flex", flexDirection: "column", gap: 8, width: "100%", maxWidth: 420 }}>
+              <form onSubmit={submit} style={{ display: "flex", flexDirection: "row", gap: 6, padding: 5,
+                borderRadius: 13, border: "1px solid rgba(0,0,0,0.1)",
+                background: "#fff", boxShadow: "0 1px 4px rgba(0,0,0,0.06)", width: "100%" }}>
+                <input type="text" value={email} onChange={e => setEmail(e.target.value)}
+                  placeholder="your@email.com"
+                  style={{ flex: 1, minWidth: 0, background: "transparent", border: "none", outline: "none",
+                    padding: "10px 12px", fontSize: 14, color: TXT, fontFamily: "var(--font-sans)" }} />
+                <button type="submit" disabled={busy}
+                  style={{ padding: "10px 18px", borderRadius: 9, border: "none",
+                    background: BLUE, color: "#fff", fontFamily: "var(--font-sans)",
+                    fontSize: 13, fontWeight: 600, cursor: "pointer",
+                    opacity: busy ? 0.6 : 1, whiteSpace: "nowrap" }}>
+                  {busy ? "Joining…" : "Join Waitlist"}
+                </button>
+              </form>
+              {msg && (
+                <p style={{ fontFamily: "var(--font-mono)", fontSize: 11, textAlign: "center",
+                  margin: 0, color: msgOk ? "#16a34a" : "#dc2626" }}>{msg}</p>
+              )}
+            </div>
+
+            {/* Trust pills */}
+            <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
+              {["WB Soul Native", "3 Smart Contracts Live", "Whitechain Sepolia"].map((t, i) => (
+                <span key={t} style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                  {i > 0 && <span style={{ color: "#E5E7EB", fontSize: 12 }}>·</span>}
+                  <span style={{ fontFamily: "var(--font-mono)", fontSize: 10,
+                    color: TXT3, letterSpacing: "0.08em", textTransform: "uppercase" }}>{t}</span>
+                </span>
+              ))}
+            </div>
+          </div>
+
+          {/* Right — 3D floating attestation receipt */}
+          <div style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
+            <div style={{ perspective: 1200, width: "100%", maxWidth: 320 }}>
+              <AttestationReceipt score={820} isHeroPreview />
+            </div>
           </div>
         </div>
       </section>
@@ -175,48 +176,48 @@ export default function Home() {
       {/* ══════════════════════════════════════════
           02. ECOSYSTEM ARCHITECTURE & GAP ANALYSIS
       ══════════════════════════════════════════ */}
-      <section style={{ position: "relative", zIndex: 5, maxWidth: 960, margin: "0 auto", padding: "0 24px 96px" }}>
-        <div style={{ borderRadius: 24, border: CARD_B, background: "linear-gradient(180deg, #F8FAFC 0%, #F1F5F9 100%)",
-          padding: "48px 40px", boxShadow: "0 4px 20px rgba(61,111,255,0.04)" }}>
+      <section style={{ position: "relative", zIndex: 5, maxWidth: 960, margin: "0 auto", padding: "0 20px 80px" }}>
+        <div style={{ borderRadius: 20, border: CARD_B, background: "linear-gradient(180deg, #F8FAFC 0%, #F1F5F9 100%)",
+          padding: "36px 20px", boxShadow: "0 4px 20px rgba(61,111,255,0.04)" }}>
           
-          <div style={{ textAlign: "center", marginBottom: 36 }}>
+          <div style={{ textAlign: "center", marginBottom: 32 }}>
             <div style={{ fontFamily: "var(--font-mono)", fontSize: 9, fontWeight: 700, color: BLUE,
-              textTransform: "uppercase", letterSpacing: "0.24em", marginBottom: 10 }}>Ecosystem Alignment</div>
-            <h2 style={{ fontFamily: "var(--font-display)", fontWeight: 800, fontSize: "clamp(24px,3.5vw,34px)",
-              letterSpacing: "-0.03em", color: TXT, margin: "0 0 12px" }}>
+              textTransform: "uppercase", letterSpacing: "0.24em", marginBottom: 8 }}>Ecosystem Alignment</div>
+            <h2 style={{ fontFamily: "var(--font-display)", fontWeight: 800, fontSize: "clamp(22px,3.5vw,34px)",
+              letterSpacing: "-0.03em", color: TXT, margin: "0 0 10px" }}>
               Identity without utility is just a credential.
             </h2>
-            <p style={{ fontFamily: "var(--font-sans)", fontSize: 14.5, color: TXT2, maxWidth: 580, margin: "0 auto", lineHeight: 1.65 }}>
+            <p style={{ fontFamily: "var(--font-sans)", fontSize: 14, color: TXT2, maxWidth: 580, margin: "0 auto", lineHeight: 1.6 }}>
               Whitechain and WhiteBIT provide 5M+ users and WB Soul identity. SOVA provides the machine-readable reputation layer that makes identity actionable for dApps.
             </p>
           </div>
 
           {/* Stack Pipeline Diagram */}
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(5, 1fr)", gap: 12, alignItems: "center", textAlign: "center" }}>
+          <div className="grid-pipeline">
             {[
               { title: "WhiteBIT", sub: "5M+ Users", bg: "#fff" },
               { title: "Whitechain", sub: "Distribution L2", bg: "#fff" },
               { title: "WB Soul", sub: "Identity Anchor", bg: "#fff" },
               { title: "SOVA Engine", sub: "Reputation Layer", bg: "linear-gradient(135deg, #3D6FFF 0%, #6366f1 100%)", color: "#fff" },
               { title: "Whitechain dApps", sub: "Lending, DEX, Drops", bg: "#fff" },
-            ].map((item, idx) => (
-              <div key={item.title} style={{ display: "flex", flexDirection: "column", gap: 6, padding: "16px 10px",
-                borderRadius: 14, border: item.color ? "none" : BORDER, background: item.bg,
-                color: item.color || TXT, boxShadow: item.color ? "0 4px 14px rgba(61,111,255,0.25)" : "none" }}>
-                <span style={{ fontFamily: "var(--font-display)", fontWeight: 700, fontSize: 14 }}>{item.title}</span>
+            ].map((item) => (
+              <div key={item.title} style={{ display: "flex", flexDirection: "column", gap: 4, padding: "14px 10px",
+                borderRadius: 12, border: item.color ? "none" : BORDER, background: item.bg,
+                color: item.color || TXT, textAlign: "center", boxShadow: item.color ? "0 4px 14px rgba(61,111,255,0.25)" : "none" }}>
+                <span style={{ fontFamily: "var(--font-display)", fontWeight: 700, fontSize: 13 }}>{item.title}</span>
                 <span style={{ fontFamily: "var(--font-mono)", fontSize: 9, opacity: 0.8, textTransform: "uppercase", letterSpacing: "0.08em" }}>{item.sub}</span>
               </div>
             ))}
           </div>
 
           {/* User A vs User B Behavioral Contrast */}
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 20, marginTop: 36 }}>
-            <div style={{ padding: "24px 24px", borderRadius: 16, background: "#fff", border: BORDER }}>
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 12 }}>
-                <span style={{ fontFamily: "var(--font-display)", fontWeight: 700, fontSize: 15, color: TXT }}>User A (Basic Credential)</span>
-                <span style={{ fontFamily: "var(--font-mono)", fontSize: 10, color: "#f97316", background: "rgba(249,115,22,0.1)", padding: "2px 8px", borderRadius: 4 }}>Unrated</span>
+          <div className="grid-2col" style={{ marginTop: 28 }}>
+            <div style={{ padding: "20px 20px", borderRadius: 14, background: "#fff", border: BORDER }}>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 10 }}>
+                <span style={{ fontFamily: "var(--font-display)", fontWeight: 700, fontSize: 14, color: TXT }}>User A (Basic Credential)</span>
+                <span style={{ fontFamily: "var(--font-mono)", fontSize: 9, color: "#f97316", background: "rgba(249,115,22,0.1)", padding: "2px 6px", borderRadius: 4 }}>Unrated</span>
               </div>
-              <ul style={{ margin: 0, padding: "0 0 0 16px", fontFamily: "var(--font-mono)", fontSize: 12, color: TXT2, lineHeight: 1.8 }}>
+              <ul style={{ margin: 0, padding: "0 0 0 14px", fontFamily: "var(--font-mono)", fontSize: 11.5, color: TXT2, lineHeight: 1.7 }}>
                 <li>WB Soul Verified ✓</li>
                 <li>2 days active onchain</li>
                 <li>3 total transactions</li>
@@ -224,12 +225,12 @@ export default function Home() {
               </ul>
             </div>
 
-            <div style={{ padding: "24px 24px", borderRadius: 16, background: "#fff", border: "1px solid rgba(16,185,129,0.3)", boxShadow: "0 2px 10px rgba(16,185,129,0.06)" }}>
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 12 }}>
-                <span style={{ fontFamily: "var(--font-display)", fontWeight: 700, fontSize: 15, color: TXT }}>User B (SOVA Verified)</span>
-                <span style={{ fontFamily: "var(--font-mono)", fontSize: 10, color: "#10b981", background: "rgba(16,185,129,0.1)", padding: "2px 8px", borderRadius: 4, fontWeight: 700 }}>Score: 820 / Elite</span>
+            <div style={{ padding: "20px 20px", borderRadius: 14, background: "#fff", border: "1px solid rgba(16,185,129,0.3)", boxShadow: "0 2px 10px rgba(16,185,129,0.06)" }}>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 10 }}>
+                <span style={{ fontFamily: "var(--font-display)", fontWeight: 700, fontSize: 14, color: TXT }}>User B (SOVA Verified)</span>
+                <span style={{ fontFamily: "var(--font-mono)", fontSize: 9, color: "#10b981", background: "rgba(16,185,129,0.1)", padding: "2px 6px", borderRadius: 4, fontWeight: 700 }}>Score: 820 / Elite</span>
               </div>
-              <ul style={{ margin: 0, padding: "0 0 0 16px", fontFamily: "var(--font-mono)", fontSize: 12, color: TXT2, lineHeight: 1.8 }}>
+              <ul style={{ margin: 0, padding: "0 0 0 14px", fontFamily: "var(--font-mono)", fontSize: 11.5, color: TXT2, lineHeight: 1.7 }}>
                 <li>WB Soul Verified ✓</li>
                 <li>18 months holding longevity</li>
                 <li>47 active weeks & healthy borrow history</li>
@@ -244,43 +245,42 @@ export default function Home() {
       {/* ══════════════════════════════════════════
           03. HOW IT WORKS
       ══════════════════════════════════════════ */}
-      <section style={{ position: "relative", zIndex: 5, maxWidth: 960, margin: "0 auto", padding: "0 24px 96px" }}>
-        <div style={{ textAlign: "center", marginBottom: 52 }}>
+      <section style={{ position: "relative", zIndex: 5, maxWidth: 960, margin: "0 auto", padding: "0 20px 80px" }}>
+        <div style={{ textAlign: "center", marginBottom: 44 }}>
           <div style={{ fontFamily: "var(--font-mono)", fontSize: 9, fontWeight: 700, color: BLUE,
-            textTransform: "uppercase", letterSpacing: "0.24em", marginBottom: 12 }}>How it works</div>
-          <h2 style={{ fontFamily: "var(--font-display)", fontWeight:800,
-            fontSize: "clamp(26px,4vw,38px)", letterSpacing: "-0.03em", color: TXT, margin: 0 }}>
+            textTransform: "uppercase", letterSpacing: "0.24em", marginBottom: 10 }}>How it works</div>
+          <h2 style={{ fontFamily: "var(--font-display)", fontWeight: 800,
+            fontSize: "clamp(24px,4vw,36px)", letterSpacing: "-0.03em", color: TXT, margin: 0 }}>
             From identity to composable proof<br />in three steps.
           </h2>
         </div>
 
-        <div style={{ display: "grid", gridTemplateColumns: "1fr auto 1fr auto 1fr", alignItems: "start", gap: 0 }}>
+        <div className="how-it-works-flow">
           {[
             { icon: <IconSoul />,    n: "01", title: "WB Soul Resolution",  body: "Resolves your WB Soul ID and associated wallets into a single behavioral history without extra KYC steps." },
             { icon: <IconAnalyze />, n: "02", title: "Behavioral Scoring",   body: "Analyzes retention, active weeks, holding longevity, and transaction health into a composable 0–1000 SoulScore." },
             { icon: <IconAttest />,  n: "03", title: "Onchain Attestation",  body: "Commits salted, privacy-preserving proofs onchain — callable by any dApp via a single Solidity line." },
           ].map(({ icon, n, title, body }, i) => (
-            <>
-              <div key={title} style={{ padding: "28px 24px 30px", borderRadius: 18, border: BORDER,
-                background: CARD, display: "flex", flexDirection: "column", gap: 16 }}>
+            <div key={title} style={{ display: "contents" }}>
+              <div style={{ padding: "24px 20px", borderRadius: 16, border: BORDER,
+                background: CARD, display: "flex", flexDirection: "column", gap: 14 }}>
                 <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-                  <div style={{ width: 40, height: 40, borderRadius: 10,
+                  <div style={{ width: 38, height: 38, borderRadius: 10,
                     background: "rgba(61,111,255,0.07)", display: "flex",
                     alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
                     {icon}
                   </div>
                   <span style={{ fontFamily: "var(--font-mono)", fontSize: 10, color: TXT3, letterSpacing: "0.1em" }}>{n}</span>
                 </div>
-                <h3 style={{ fontFamily: "var(--font-display)", fontWeight: 700, fontSize: 17, color: TXT, margin: 0 }}>{title}</h3>
-                <p style={{ fontFamily: "var(--font-sans)", fontSize: 13.5, color: TXT2, lineHeight: 1.65, margin: 0 }}>{body}</p>
+                <h3 style={{ fontFamily: "var(--font-display)", fontWeight: 700, fontSize: 16, color: TXT, margin: 0 }}>{title}</h3>
+                <p style={{ fontFamily: "var(--font-sans)", fontSize: 13, color: TXT2, lineHeight: 1.6, margin: 0 }}>{body}</p>
               </div>
               {i < 2 && (
-                <div key={`a-${i}`} style={{ display: "flex", alignItems: "center", justifyContent: "center",
-                  padding: "0 10px", paddingTop: 20 }}>
+                <div key={`a-${i}`} className="arrow-divider">
                   <ArrowRight />
                 </div>
               )}
-            </>
+            </div>
           ))}
         </div>
       </section>
@@ -288,22 +288,21 @@ export default function Home() {
       {/* ══════════════════════════════════════════
           04. INTERACTIVE SIMULATOR
       ══════════════════════════════════════════ */}
-      <section style={{ position: "relative", zIndex: 5, maxWidth: 960, margin: "0 auto", padding: "0 24px 96px" }}>
-        <div style={{ display: "grid", gridTemplateColumns: "1.1fr 0.9fr", gap: 0,
-          borderRadius: 24, border: BORDER, overflow: "hidden" }}>
+      <section style={{ position: "relative", zIndex: 5, maxWidth: 960, margin: "0 auto", padding: "0 20px 80px" }}>
+        <div className="grid-simulator" style={{ border: BORDER }}>
 
           {/* Controls */}
-          <div style={{ padding: "44px 48px", background: CARD,
-            display: "flex", flexDirection: "column", gap: 32, justifyContent: "center" }}>
+          <div style={{ padding: "32px 24px", background: CARD,
+            display: "flex", flexDirection: "column", gap: 24, justifyContent: "center" }}>
             <div>
               <div style={{ fontFamily: "var(--font-mono)", fontSize: 9, fontWeight: 700, color: BLUE,
-                textTransform: "uppercase", letterSpacing: "0.24em", marginBottom: 10 }}>Live Simulator</div>
-              <h2 style={{ fontFamily: "var(--font-display)", fontWeight: 800, fontSize: 26,
-                letterSpacing: "-0.03em", color: TXT, margin: "0 0 8px" }}>
+                textTransform: "uppercase", letterSpacing: "0.24em", marginBottom: 8 }}>Live Simulator</div>
+              <h2 style={{ fontFamily: "var(--font-display)", fontWeight: 800, fontSize: 24,
+                letterSpacing: "-0.03em", color: TXT, margin: "0 0 6px" }}>
                 Simulate your SoulScore
               </h2>
-              <p style={{ fontFamily: "var(--font-sans)", fontSize: 13.5, color: TXT2,
-                margin: 0, lineHeight: 1.6 }}>
+              <p style={{ fontFamily: "var(--font-sans)", fontSize: 13, color: TXT2,
+                margin: 0, lineHeight: 1.5 }}>
                 Adjust behavioral parameters to evaluate how SOVA updates onchain credit profiles.
               </p>
             </div>
@@ -312,7 +311,7 @@ export default function Home() {
               { label: "Active Weeks",       val: weeks, mn: 1,  mx: 52,   unit: `${weeks} active week${weeks !== 1 ? "s" : ""}`, set: setWeeks },
               { label: "Onchain Longevity",  val: age,   mn: 1,  mx: 24,   unit: `${age} month${age !== 1 ? "s" : ""}`,        set: setAge },
             ].map(({ label, val, mn, mx, unit, set }) => (
-              <div key={label} style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+              <div key={label} style={{ display: "flex", flexDirection: "column", gap: 6 }}>
                 <div style={{ display: "flex", justifyContent: "space-between",
                   fontFamily: "var(--font-mono)", fontSize: 11 }}>
                   <span style={{ color: TXT3, textTransform: "uppercase", letterSpacing: "0.1em" }}>{label}</span>
@@ -326,7 +325,7 @@ export default function Home() {
           </div>
 
           {/* Receipt */}
-          <div style={{ padding: "44px 36px", background: "#fff",
+          <div style={{ padding: "32px 20px", background: "#fff",
             display: "flex", alignItems: "center", justifyContent: "center" }}>
             <AttestationReceipt score={score} />
           </div>
@@ -336,17 +335,17 @@ export default function Home() {
       {/* ══════════════════════════════════════════
           05. BUILT FOR — Ecosystem Use Cases
       ══════════════════════════════════════════ */}
-      <section style={{ position: "relative", zIndex: 5, maxWidth: 960, margin: "0 auto", padding: "0 24px 96px" }}>
-        <div style={{ textAlign: "center", marginBottom: 52 }}>
+      <section style={{ position: "relative", zIndex: 5, maxWidth: 960, margin: "0 auto", padding: "0 20px 80px" }}>
+        <div style={{ textAlign: "center", marginBottom: 44 }}>
           <div style={{ fontFamily: "var(--font-mono)", fontSize: 9, fontWeight: 700, color: BLUE,
-            textTransform: "uppercase", letterSpacing: "0.24em", marginBottom: 12 }}>Ecosystem Utility</div>
+            textTransform: "uppercase", letterSpacing: "0.24em", marginBottom: 10 }}>Ecosystem Utility</div>
           <h2 style={{ fontFamily: "var(--font-display)", fontWeight: 800,
-            fontSize: "clamp(26px,4vw,38px)", letterSpacing: "-0.03em", color: TXT, margin: 0 }}>
+            fontSize: "clamp(24px,4vw,36px)", letterSpacing: "-0.03em", color: TXT, margin: 0 }}>
             One primitive. Four dApp applications.
           </h2>
         </div>
 
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 16 }}>
+        <div className="grid-2col">
           {[
             {
               tag: "Lending & Money Markets",
@@ -368,26 +367,26 @@ export default function Home() {
               title: "1-Line Smart Contract Query",
               body: "Query `uint256 score = sova.getScore(soulId)` directly inside Solidity. Zero middleware, zero offchain oracle delay.",
             },
-          ].map(({ tag, title, body }, i) => (
+          ].map(({ tag, title, body }) => (
             <SpotlightCard key={tag}
-              className="spot-card rounded-[18px]"
+              className="spot-card"
               style={{
                 background: CARD,
                 border: BORDER,
-                padding: "32px 30px",
-                display: "flex", flexDirection: "column", gap: 14,
-                borderRadius: 18,
+                padding: "24px 20px",
+                display: "flex", flexDirection: "column", gap: 12,
+                borderRadius: 16,
               }}>
               <span style={{ fontFamily: "var(--font-mono)", fontSize: 9, fontWeight: 700,
                 color: BLUE, textTransform: "uppercase", letterSpacing: "0.2em", position: "relative", zIndex: 10 }}>
                 {tag}
               </span>
-              <h3 style={{ fontFamily: "var(--font-display)", fontWeight: 700, fontSize: 18,
+              <h3 style={{ fontFamily: "var(--font-display)", fontWeight: 700, fontSize: 17,
                 color: TXT, margin: 0, lineHeight: 1.3, position: "relative", zIndex: 10 }}>
                 {title}
               </h3>
-              <p style={{ fontFamily: "var(--font-sans)", fontSize: 13.5, color: TXT2,
-                lineHeight: 1.65, margin: 0, position: "relative", zIndex: 10 }}>
+              <p style={{ fontFamily: "var(--font-sans)", fontSize: 13, color: TXT2,
+                lineHeight: 1.6, margin: 0, position: "relative", zIndex: 10 }}>
                 {body}
               </p>
             </SpotlightCard>
@@ -398,16 +397,16 @@ export default function Home() {
       {/* ══════════════════════════════════════════
           06. DEVELOPER INTEGRATION & PROOF
       ══════════════════════════════════════════ */}
-      <section style={{ position: "relative", zIndex: 5, maxWidth: 960, margin: "0 auto", padding: "0 24px 96px" }}>
-        <div style={{ display: "grid", gridTemplateColumns: "1.1fr 0.9fr", gap: 24 }}>
+      <section style={{ position: "relative", zIndex: 5, maxWidth: 960, margin: "0 auto", padding: "0 20px 80px" }}>
+        <div className="dev-section-grid">
           
           {/* Left: Code Snippet */}
-          <div style={{ borderRadius: 20, border: "1px solid #1E293B", background: "#0F172A", padding: "28px 28px", color: "#F8FAFC" }}>
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 16 }}>
+          <div style={{ borderRadius: 16, border: "1px solid #1E293B", background: "#0F172A", padding: "24px 20px", color: "#F8FAFC" }}>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 12 }}>
               <span style={{ fontFamily: "var(--font-mono)", fontSize: 10, color: "#94A3B8", letterSpacing: "0.1em" }}>ISOVARegistry.sol</span>
               <span style={{ fontFamily: "var(--font-mono)", fontSize: 10, color: "#38BDF8" }}>Solidity v0.8.20</span>
             </div>
-            <pre style={{ fontFamily: "var(--font-mono)", fontSize: 12, lineHeight: 1.7, margin: 0, color: "#E2E8F0", overflowX: "auto" }}>
+            <pre style={{ fontFamily: "var(--font-mono)", fontSize: 11.5, lineHeight: 1.6, margin: 0, color: "#E2E8F0", overflowX: "auto" }}>
               <code>{`// dApp Solidity Query Example
 import "./ISOVARegistry.sol";
 
@@ -420,7 +419,7 @@ contract LendingPool {
         (uint256 score, uint8 status) = 
             sova.getScore(soulId);
             
-        if (score >= 750) return 150000; // Tier 1
+        if (score >= 750) return 150000;
         return 50000;
     }
 }`}</code>
@@ -428,20 +427,20 @@ contract LendingPool {
           </div>
 
           {/* Right: Deployed Smart Contracts */}
-          <div style={{ borderRadius: 20, border: BORDER, background: CARD, padding: "28px 28px", display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
+          <div style={{ borderRadius: 16, border: BORDER, background: CARD, padding: "24px 20px", display: "flex", flexDirection: "column", gap: 16 }}>
             <div>
-              <div style={{ fontFamily: "var(--font-mono)", fontSize: 9, fontWeight: 700, color: BLUE, textTransform: "uppercase", letterSpacing: "0.24em", marginBottom: 8 }}>Deployed Infrastructure</div>
-              <h3 style={{ fontFamily: "var(--font-display)", fontWeight: 700, fontSize: 20, color: TXT, margin: "0 0 16px" }}>Whitechain Sepolia Contracts</h3>
+              <div style={{ fontFamily: "var(--font-mono)", fontSize: 9, fontWeight: 700, color: BLUE, textTransform: "uppercase", letterSpacing: "0.24em", marginBottom: 6 }}>Deployed Infrastructure</div>
+              <h3 style={{ fontFamily: "var(--font-display)", fontWeight: 700, fontSize: 18, color: TXT, margin: 0 }}>Whitechain Sepolia Contracts</h3>
             </div>
-            <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+            <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
               {[
                 { name: "SovaAttestationRegistry", addr: "0x3A6c...f8e2" },
                 { name: "SovaTimelockMultisig",   addr: "0x9B1d...a341" },
                 { name: "SovaNetworkProof",       addr: "0xC2f4...8b09" },
               ].map(c => (
-                <div key={c.name} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "10px 14px", borderRadius: 10, background: "#fff", border: BORDER }}>
+                <div key={c.name} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "10px 12px", borderRadius: 8, background: "#fff", border: BORDER }}>
                   <span style={{ fontFamily: "var(--font-sans)", fontSize: 12, fontWeight: 600, color: TXT }}>{c.name}</span>
-                  <a href="https://testnet.whitechain.io" target="_blank" style={{ fontFamily: "var(--font-mono)", fontSize: 11, color: BLUE, textDecoration: "none" }}>{c.addr} ↗</a>
+                  <a href="https://testnet.whitechain.io" target="_blank" style={{ fontFamily: "var(--font-mono)", fontSize: 10.5, color: BLUE, textDecoration: "none" }}>{c.addr} ↗</a>
                 </div>
               ))}
             </div>
@@ -453,17 +452,17 @@ contract LendingPool {
       {/* ══════════════════════════════════════════
           07. MILESTONE ROADMAP
       ══════════════════════════════════════════ */}
-      <section style={{ position: "relative", zIndex: 5, maxWidth: 960, margin: "0 auto", padding: "0 24px 96px" }}>
-        <div style={{ marginBottom: 40 }}>
+      <section style={{ position: "relative", zIndex: 5, maxWidth: 960, margin: "0 auto", padding: "0 20px 80px" }}>
+        <div style={{ marginBottom: 36 }}>
           <div style={{ fontFamily: "var(--font-mono)", fontSize: 9, fontWeight: 700, color: BLUE,
-            textTransform: "uppercase", letterSpacing: "0.24em", marginBottom: 12 }}>Roadmap</div>
+            textTransform: "uppercase", letterSpacing: "0.24em", marginBottom: 10 }}>Roadmap</div>
           <h2 style={{ fontFamily: "var(--font-display)", fontWeight: 800,
-            fontSize: "clamp(26px,4vw,38px)", letterSpacing: "-0.03em", color: TXT, margin: 0 }}>
+            fontSize: "clamp(24px,4vw,36px)", letterSpacing: "-0.03em", color: TXT, margin: 0 }}>
             Roadmap to Whitechain Mainnet.
           </h2>
         </div>
         <div style={{ display: "flex", flexDirection: "column", gap: 0,
-          border: BORDER, borderRadius: 18, overflow: "hidden" }}>
+          border: BORDER, borderRadius: 16, overflow: "hidden" }}>
           {[
             { n: "00", phase: "Reconnaissance",  status: "Done",    body: "Whitechain Sepolia validated. WB Soul identity contracts mapped. SOVA Registry deployed and verified onchain." },
             { n: "01", phase: "Specification",   status: "Active",  body: "Freezing v0.1 scoring parameters, time-decay weights, and anti-gaming rules in alignment with Whitechain Q3 2026 Testnet." },
@@ -476,24 +475,24 @@ contract LendingPool {
             const badgeClr = isDone ? "#16a34a" : isActive ? BLUE : isNext ? "#d97706" : "#9CA3AF";
             const badgeBg  = isDone ? "rgba(22,163,74,0.08)" : isActive ? "rgba(61,111,255,0.08)" : isNext ? "rgba(217,119,6,0.08)" : "rgba(0,0,0,0.04)";
             return (
-              <div key={n} style={{ display: "grid", gridTemplateColumns: "56px 1fr auto", gap: 24,
-                padding: "22px 32px", alignItems: "center",
+              <div key={n} style={{ display: "grid", gridTemplateColumns: "40px 1fr auto", gap: 14,
+                padding: "18px 20px", alignItems: "center",
                 background: isActive ? "rgba(61,111,255,0.025)" : "#fff",
                 borderBottom: i < 5 ? "1px solid rgba(0,0,0,0.07)" : "none" }}>
-                <span style={{ fontFamily: "var(--font-mono)", fontSize: 20, fontWeight: 700,
-                  color: "rgba(0,0,0,0.07)", lineHeight: 1 }}>{n}</span>
+                <span style={{ fontFamily: "var(--font-mono)", fontSize: 16, fontWeight: 700,
+                  color: "rgba(0,0,0,0.12)", lineHeight: 1 }}>{n}</span>
                 <div>
-                  <div style={{ fontFamily: "var(--font-display)", fontWeight: 700, fontSize: 15,
-                    color: TXT, marginBottom: 3 }}>{phase}</div>
-                  <div style={{ fontFamily: "var(--font-sans)", fontSize: 13, color: TXT2,
-                    lineHeight: 1.55 }}>{body}</div>
+                  <div style={{ fontFamily: "var(--font-display)", fontWeight: 700, fontSize: 14,
+                    color: TXT, marginBottom: 2 }}>{phase}</div>
+                  <div style={{ fontFamily: "var(--font-sans)", fontSize: 12.5, color: TXT2,
+                    lineHeight: 1.5 }}>{body}</div>
                 </div>
                 <span style={{ display: "flex", alignItems: "center", gap: 5,
                   fontFamily: "var(--font-mono)", fontSize: 9, fontWeight: 700,
-                  textTransform: "uppercase", letterSpacing: "0.12em",
-                  color: badgeClr, background: badgeBg, padding: "4px 10px",
-                  borderRadius: 5, whiteSpace: "nowrap" }}>
-                  {isActive && <span style={{ width: 5, height: 5, borderRadius: "50%", background: BLUE }} />}
+                  textTransform: "uppercase", letterSpacing: "0.1em",
+                  color: badgeClr, background: badgeBg, padding: "3px 8px",
+                  borderRadius: 4, whiteSpace: "nowrap" }}>
+                  {isActive && <span style={{ width: 4, height: 4, borderRadius: "50%", background: BLUE }} />}
                   {status}
                 </span>
               </div>
@@ -507,30 +506,30 @@ contract LendingPool {
       ══════════════════════════════════════════ */}
       <footer style={{ position: "relative", zIndex: 5, borderTop: "1px solid rgba(0,0,0,0.07)",
         background: "#F7F7F8" }}>
-        <div style={{ maxWidth: 1100, margin: "0 auto", padding: "64px 24px 0",
-          display: "grid", gridTemplateColumns: "1.4fr 0.6fr", gap: 64, alignItems: "start" }}>
+        <div className="grid-footer" style={{ maxWidth: 1100, margin: "0 auto", padding: "48px 20px 0",
+          alignItems: "start" }}>
 
           {/* Brand + columns */}
-          <div style={{ display: "flex", flexDirection: "column", gap: 40 }}>
-            <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+          <div style={{ display: "flex", flexDirection: "column", gap: 32 }}>
+            <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
               <img src="/assets/sova-gradient.png" alt="SOVA Protocol"
                 style={{ height: 16, width: "auto", display: "block",
                   objectFit: "contain", objectPosition: "left" }} />
               <p style={{ fontFamily: "var(--font-sans)", fontSize: 13, color: TXT3,
-                lineHeight: 1.7, maxWidth: 340, margin: 0 }}>
+                lineHeight: 1.6, maxWidth: 340, margin: 0 }}>
                 The verifiable onchain reputation primitive for Whitechain L2.
               </p>
             </div>
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: 28 }}>
+            <div className="footer-directory-grid">
               {[
                 { title: "Protocol",   links: [["Whitechain Sepolia", "https://testnet.whitechain.io"], ["Registry Specs", "/docs/architecture"], ["Soulbound ID", "/docs/architecture"]] },
                 { title: "Developers", links: [["GitHub", "https://github.com/Dexanode/sova-protocol"], ["Solidity Query API", "/docs/api"], ["Architecture Docs", "/docs/architecture"]] },
                 { title: "Community",  links: [["Twitter / X", "https://x.com/sovaprotocol"], ["Telegram", "https://t.me/sovaprotocol"], ["Discord", "https://discord.gg/sovaprotocol"]] },
               ].map(({ title, links }) => (
-                <div key={title} style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+                <div key={title} style={{ display: "flex", flexDirection: "column", gap: 10 }}>
                   <h4 style={{ fontFamily: "var(--font-mono)", fontSize: 9, fontWeight: 700, color: TXT3,
                     textTransform: "uppercase", letterSpacing: "0.2em", margin: 0 }}>{title}</h4>
-                  <ul style={{ listStyle: "none", margin: 0, padding: 0, display: "flex", flexDirection: "column", gap: 9 }}>
+                  <ul style={{ listStyle: "none", margin: 0, padding: 0, display: "flex", flexDirection: "column", gap: 8 }}>
                     {links.map(([label, href]) => (
                       <li key={label}><a href={href} target={href.startsWith("http") ? "_blank" : undefined}
                         style={{ fontFamily: "var(--font-sans)", fontSize: 13, color: TXT2,
@@ -545,20 +544,20 @@ contract LendingPool {
           </div>
 
           {/* CTA card */}
-          <div style={{ borderRadius: 18, padding: "26px 24px 22px",
+          <div style={{ borderRadius: 16, padding: "24px 20px",
             border: "1px solid rgba(61,111,255,0.18)", background: "#fff",
             boxShadow: "0 2px 12px rgba(61,111,255,0.06)" }}>
-            <div style={{ display: "flex", alignItems: "center", gap: 7, marginBottom: 14 }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 7, marginBottom: 12 }}>
               <span style={{ width: 5, height: 5, borderRadius: "50%", background: "#16a34a" }} />
               <span style={{ fontFamily: "var(--font-mono)", fontSize: 9, fontWeight: 700,
                 color: "#16a34a", textTransform: "uppercase", letterSpacing: "0.18em" }}>Whitechain Sepolia Live</span>
             </div>
             <h4 style={{ fontFamily: "var(--font-display)", fontWeight: 700, fontSize: 16,
-              color: TXT, margin: "0 0 10px", lineHeight: 1.35 }}>
+              color: TXT, margin: "0 0 8px", lineHeight: 1.35 }}>
               Build reputation-aware dApps.
             </h4>
             <p style={{ fontFamily: "var(--font-sans)", fontSize: 13, color: TXT2,
-              lineHeight: 1.6, margin: "0 0 18px" }}>
+              lineHeight: 1.55, margin: "0 0 16px" }}>
               Join the waitlist for early developer access and SDK documentation.
             </p>
             <button onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
@@ -573,13 +572,13 @@ contract LendingPool {
         </div>
 
         {/* Bottom bar */}
-        <div style={{ maxWidth: 1100, margin: "40px auto 0", padding: "18px 24px 28px",
+        <div style={{ maxWidth: 1100, margin: "32px auto 0", padding: "16px 20px 24px",
           borderTop: "1px solid rgba(0,0,0,0.06)", display: "flex",
           justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 10 }}>
           <span style={{ fontFamily: "var(--font-mono)", fontSize: 11, color: TXT3 }}>
             2026 © Sova Protocol, onchain
           </span>
-          <div style={{ display: "flex", alignItems: "center", gap: 18 }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
             <a href="https://github.com/Dexanode/sova-protocol" target="_blank" aria-label="GitHub"
               style={{ color: TXT3, transition: "color .2s", display: "flex" }}
               onMouseEnter={e => (e.currentTarget.style.color = TXT)}
