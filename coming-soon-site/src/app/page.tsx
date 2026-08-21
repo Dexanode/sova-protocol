@@ -524,7 +524,7 @@ contract LendingPool {
             <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: 28 }}>
               {[
                 { title: "Protocol",   links: [["Whitechain Sepolia", "https://testnet.whitechain.io"], ["Registry Specs", "/docs/architecture"], ["Soulbound ID", "/docs/architecture"]] },
-                { title: "Developers", links: [["GitHub", "https://github.com/Dexanode/sova-protocol"], ["Solidity Query API", "/docs/architecture"], ["Architecture Docs", "/docs/architecture"]] },
+                { title: "Developers", links: [["GitHub", "https://github.com/Dexanode/sova-protocol"], ["Solidity Query API", "/docs/api"], ["Architecture Docs", "/docs/architecture"]] },
                 { title: "Community",  links: [["Twitter / X", "https://x.com/sovaprotocol"], ["Telegram", "https://t.me/sovaprotocol"], ["Discord", "https://discord.gg/sovaprotocol"]] },
               ].map(({ title, links }) => (
                 <div key={title} style={{ display: "flex", flexDirection: "column", gap: 12 }}>
