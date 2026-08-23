@@ -19,10 +19,11 @@
 - Phase 1.3 — isolated issuer EIP-712 signing and untrusted relayer submission validated on testnet
 - Phase 1.4 — testnet verification dashboard and explicit consumer-policy demo completed
 - Phase 1.5 — testnet pilot observability, API hardening, and operational validation completed
+- Phase 1.6 — bounded external pilot package, privacy-preserving feedback capture, and exit criteria completed
 
 ## Next
 
-- Phase 1.6 — bounded external pilot packaging, feedback capture, and exit criteria
+- Phase 1.7 — execute the bounded testnet pilot and record evidence-backed exit decision
 
 ## Deferred production gate
 

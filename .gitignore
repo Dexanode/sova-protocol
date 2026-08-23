@@ -10,4 +10,5 @@ ignition/deployments/
 pilot-data/
 indexer-data/
 issuer-data/
+pilot-feedback/
 .DS_Store

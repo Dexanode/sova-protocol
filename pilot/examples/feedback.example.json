@@ -1,0 +1,16 @@
+{
+  "version": "1.0",
+  "sessionId": "synthetic_demo_01",
+  "submittedAt": "2026-08-23T00:00:00.000Z",
+  "role": "consumer",
+  "taskResults": [
+    { "task": "inspect_attestation", "completed": true, "seconds": 45 },
+    { "task": "evaluate_policy", "completed": true, "seconds": 70 },
+    { "task": "explain_rejection", "completed": true, "seconds": 55 }
+  ],
+  "clarityRating": 4,
+  "trustRating": 4,
+  "incidentObserved": false,
+  "rejectionReasonUnderstood": true,
+  "comments": "Synthetic example only. Do not include names, wallet keys, salts, or disclosure payloads."
+}

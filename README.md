@@ -36,6 +36,7 @@ loopback-only query API:
 npm run indexer:sync
 npm run ops:check
 npm run api:start
+npm run pilot:report
 ```
 
 The API contract is documented in `docs/api/openapi-v0.1.yaml`. Indexed data is

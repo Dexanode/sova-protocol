@@ -1,0 +1,19 @@
+{
+  "version": "1.0",
+  "environment": "whitechain-sepolia",
+  "chainId": "1874",
+  "registry": "0x953a4edC84CEBdC113688310F54adce6Dc2c8bCf",
+  "schemaId": "0xa4fd4d46f668808d9c08e88f8c48ae38525e9089c3623e3425ac895128ffb526",
+  "maxParticipants": 12,
+  "maxDurationDays": 14,
+  "syntheticDataOnly": true,
+  "realFinancialDecisionsAllowed": false,
+  "independentAuditComplete": false,
+  "tasks": [
+    "inspect_attestation",
+    "evaluate_policy",
+    "explain_rejection",
+    "verify_disclosure"
+  ],
+  "feedbackSchema": "pilot/feedback-v1.schema.json"
+}
