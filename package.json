@@ -32,6 +32,7 @@
     "external-pilot:open": "tsx scripts/pilot-open.ts",
     "external-pilot:progress": "tsx scripts/pilot-progress.ts",
     "api:campaign": "tsx scripts/api-campaign.ts",
+    "release:check": "tsx scripts/release-check.ts",
     "relay:prepare": "tsx scripts/relay-prepare.ts",
     "relay:archive": "tsx scripts/relay-archive.ts",
     "issuer:sign-relay": "hardhat run scripts/issuer-sign-relay.ts --network whitechainIssuer",

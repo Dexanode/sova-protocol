@@ -40,6 +40,7 @@ npm run pilot:report
 npm run external-pilot:open
 npm run external-pilot:progress
 npm run api:campaign
+npm run release:check
 ```
 
 The API contract is documented in `docs/api/openapi-v0.1.yaml`. Indexed data is

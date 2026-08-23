@@ -7,6 +7,15 @@ const value = document.getElementById("lookup-value");
 const error = document.getElementById("lookup-error");
 const result = document.getElementById("result-section");
 const evaluateButton = document.getElementById("evaluate-button");
+const REASON_HELP = {
+  DISCLOSURE_REQUIRED: "This policy requires a private payload disclosure, but none was supplied.",
+  DISCLOSURE_MISMATCH: "The supplied disclosure does not match the onchain commitment.",
+  UNTRUSTED_ISSUER: "The claim issuer is not accepted by this policy.",
+  WRONG_SCHEMA: "The claim schema does not match this policy.",
+  TOO_OLD: "The claim is older than this policy allows.",
+  EXPIRED: "The claim has expired.",
+  NOT_USABLE: "Current registry state does not allow this claim to be used.",
+};
 let currentAttestation = null;
 
 function shortTime(seconds) {
@@ -99,7 +108,9 @@ evaluateButton.addEventListener("click", async () => {
   }
   decision.className = `decision ${body.accepted ? "pass" : "fail"}`;
   title.textContent = body.accepted ? "Policy accepted" : "Policy rejected";
-  reasons.textContent = body.accepted ? "All explicit checks passed." : body.reasons.join(" · ");
+  reasons.textContent = body.accepted
+    ? "All explicit checks passed."
+    : body.reasons.map((reason) => `${reason} — ${REASON_HELP[reason] || "Policy requirement failed."}`).join(" · ");
 });
 
 async function boot() {

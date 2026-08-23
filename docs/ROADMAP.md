@@ -21,10 +21,17 @@
 - Phase 1.5 — testnet pilot observability, API hardening, and operational validation completed
 - Phase 1.6 — bounded external pilot package, privacy-preserving feedback capture, and exit criteria completed
 - Phase 1.7 — synthetic API validation campaign completed with 22/22 scenarios passing
+- Phase 1.8 — product findings closed and testnet integration release v0.1 engineering-frozen
 
 ## Next
 
-- Phase 1.8 — address validated API/product findings and freeze the testnet integration release
+Phase 1 is complete. Phase 2 focuses on smart-contract security and evolution:
+
+- Phase 2.1 — contract v1 security specification, invariants, and fuzz/property harness
+- Phase 2.2 — registry/governance improvements justified by validated requirements
+- Phase 2.3 — migration, recovery, and deployment rehearsal on testnet
+- Phase 2.4 — independent contract audit and tracked remediation
+- Phase 2.5 — audited smart-contract testnet release freeze
 
 ## Deferred production gate
 

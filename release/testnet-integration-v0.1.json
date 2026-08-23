@@ -1,0 +1,17 @@
+{
+  "release": "sova-testnet-integration-v0.1",
+  "status": "engineering-frozen",
+  "environment": "whitechain-sepolia",
+  "chainId": "1874",
+  "governance": "0x43e6335B0930Ed35934d16eDe1be4c688E88c020",
+  "registry": "0x953a4edC84CEBdC113688310F54adce6Dc2c8bCf",
+  "schemaId": "0xa4fd4d46f668808d9c08e88f8c48ae38525e9089c3623e3425ac895128ffb526",
+  "issuer": "0x9325b1eba43ad4a3104d191909ffa0dcfabb2b28",
+  "fixtureAttestation": "0x2bc2f60ae0fbd643015653010057be9f6f3ae1585aa8dc514c415b54c57f1bc1",
+  "apiContract": "docs/api/openapi-v0.1.yaml",
+  "syntheticCampaign": "pilot/api-campaign-v1.canonical.json",
+  "syntheticCampaignDecision": "PASS",
+  "externalUsabilityValidated": false,
+  "independentContractAuditComplete": false,
+  "productionReady": false
+}
