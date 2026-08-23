@@ -25,8 +25,8 @@
 
 - Phase 1.7 — execute the bounded testnet pilot and record evidence-backed exit decision
 
-Current gate: pilot window opened; participant sessions remain blocked until a
-fresh synthetic attestation covers the full window.
+Current gate: participant execution and at least 8 valid feedback sessions. A
+fresh ACTIVE/usable synthetic attestation now covers the full pilot window.
 
 ## Next
 
