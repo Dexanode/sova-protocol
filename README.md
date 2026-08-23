@@ -37,8 +37,9 @@ npm run indexer:sync
 npm run ops:check
 npm run api:start
 npm run pilot:report
-npm run pilot:open
-npm run pilot:progress
+npm run external-pilot:open
+npm run external-pilot:progress
+npm run api:campaign
 ```
 
 The API contract is documented in `docs/api/openapi-v0.1.yaml`. Indexed data is

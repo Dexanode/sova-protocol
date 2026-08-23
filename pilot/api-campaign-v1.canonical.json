@@ -1,0 +1,25 @@
+{
+  "version": "1.0",
+  "campaign": "synthetic-api-validation",
+  "environment": "whitechain-sepolia",
+  "chainId": "1874",
+  "fixtureAttestation": "0x2bc2f60ae0fbd643015653010057be9f6f3ae1585aa8dc514c415b54c57f1bc1",
+  "syntheticDataOnly": true,
+  "requiredScenarios": [
+    "readiness",
+    "security-headers",
+    "active-attestation",
+    "active-schema",
+    "policy-accepted",
+    "disclosure-required",
+    "attestation-not-found",
+    "subject-discovery",
+    "invalid-json",
+    "metrics",
+    "12-repeat-active-reads"
+  ],
+  "p95BudgetMs": 5000,
+  "passRule": "all scenarios pass and p95 duration is at most 5000 ms",
+  "externalUsabilityClaimAllowed": false,
+  "productionReadinessClaimAllowed": false
+}

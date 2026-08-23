@@ -11,4 +11,5 @@ pilot-data/
 indexer-data/
 issuer-data/
 pilot-feedback/
+pilot-retests/
 .DS_Store

@@ -20,21 +20,16 @@
 - Phase 1.4 — testnet verification dashboard and explicit consumer-policy demo completed
 - Phase 1.5 — testnet pilot observability, API hardening, and operational validation completed
 - Phase 1.6 — bounded external pilot package, privacy-preserving feedback capture, and exit criteria completed
-
-## In progress
-
-- Phase 1.7 — execute the bounded testnet pilot and record evidence-backed exit decision
-
-Current gate: participant execution and at least 8 valid feedback sessions. A
-fresh ACTIVE/usable synthetic attestation now covers the full pilot window.
+- Phase 1.7 — synthetic API validation campaign completed with 22/22 scenarios passing
 
 ## Next
 
-- Determined by the Phase 1.7 `PASS`, `ITERATE`, or `STOP` decision
+- Phase 1.8 — address validated API/product findings and freeze the testnet integration release
 
 ## Deferred production gate
 
 - Independent contract audit, required remediation, report hash, and final Phase 0 production-readiness freeze
+- Independent external usability pilot execution when real participants are available
 
 Deployment is intentionally separated from protocol design: the proof contract
 validates the toolchain and network path without prematurely committing SOVA to

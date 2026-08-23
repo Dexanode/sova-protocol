@@ -3,6 +3,10 @@
 This package is the Phase 1.6 testnet pilot contract between operators and
 participants. It is not a production launch package.
 
+External execution is currently deferred. Phase 1.7 uses the separate
+synthetic API campaign in `api-campaign-v1.canonical.json`; synthetic scenarios
+must not be counted as independent participant feedback.
+
 ## Bounds
 
 - Whitechain Sepolia only (`chainId=1874`).
