@@ -1,7 +1,7 @@
 import { createServer, type IncomingMessage, type ServerResponse } from "node:http";
 import { readFileSync } from "node:fs";
 import { extname, join } from "node:path";
-import { JsonRpcProvider, getAddress } from "ethers";
+import { JsonRpcProvider, getAddress, id } from "ethers";
 import {
   AttestationStatus,
   SOVA_REGISTRY_ADDRESS,
@@ -10,6 +10,12 @@ import {
 } from "../src/SovaReadClient.js";
 import { RegistryIndex } from "../src/indexer/RegistryIndex.js";
 import { evaluateAttestation, type ConsumerPolicy } from "../src/ConsumerPolicy.js";
+import {
+  FixedWindowRateLimiter,
+  ServiceMetrics,
+  requestId,
+  withTimeout,
+} from "../src/api/ServiceControls.js";
 
 const PORT = Number(process.env.PORT ?? "3000");
 const HOST = process.env.HOST ?? "127.0.0.1";
@@ -21,6 +27,22 @@ const index = new RegistryIndex(DATABASE);
 const bytes32Pattern = /^0x[0-9a-fA-F]{64}$/;
 const bytesPattern = /^0x(?:[0-9a-fA-F]{2})*$/;
 const DASHBOARD_DIRECTORY = "dashboard";
+const ATTESTATION_NOT_FOUND = id("AttestationNotFound()").slice(0, 10);
+const RPC_TIMEOUT_MS = Number(process.env.SOVA_RPC_TIMEOUT_MS ?? "8000");
+const RATE_LIMIT = Number(process.env.SOVA_RATE_LIMIT_PER_MINUTE ?? "60");
+const MAX_INDEX_LAG_BLOCKS = Number(process.env.SOVA_MAX_INDEX_LAG_BLOCKS ?? "100");
+const metrics = new ServiceMetrics();
+const limiter = new FixedWindowRateLimiter(RATE_LIMIT, 60_000);
+let lastChainHead: number | undefined;
+
+for (const [name, value] of [
+  ["PORT", PORT],
+  ["SOVA_RPC_TIMEOUT_MS", RPC_TIMEOUT_MS],
+  ["SOVA_RATE_LIMIT_PER_MINUTE", RATE_LIMIT],
+  ["SOVA_MAX_INDEX_LAG_BLOCKS", MAX_INDEX_LAG_BLOCKS],
+] as const) {
+  if (!Number.isInteger(value) || value < 1) throw new Error(`Invalid ${name}`);
+}
 
 const securityHeaders = {
   "x-content-type-options": "nosniff",
@@ -52,6 +74,15 @@ function staticFile(response: ServerResponse, file: string): void {
   response.end(body);
 }
 
+function text(response: ServerResponse, status: number, body: string): void {
+  response.writeHead(status, {
+    ...securityHeaders,
+    "content-type": "text/plain; version=0.0.4; charset=utf-8",
+    "cache-control": "no-store",
+  });
+  response.end(body);
+}
+
 async function readJson(request: IncomingMessage): Promise<unknown> {
   const chunks: Buffer[] = [];
   let size = 0;
@@ -76,7 +107,41 @@ function serializeAttestation(attestationId: string, value: Awaited<ReturnType<S
   };
 }
 
+function hasRevertData(error: unknown, selector: string): boolean {
+  if (typeof error !== "object" || error === null) return false;
+  const record = error as Record<string, unknown>;
+  if (typeof record.data === "string" && record.data.startsWith(selector)) return true;
+  return hasRevertData(record.error, selector) || hasRevertData(record.info, selector);
+}
+
+async function getAttestation(attestationId: string) {
+  try {
+    return await withTimeout(client.getAttestation(attestationId), RPC_TIMEOUT_MS);
+  } catch (error) {
+    if (hasRevertData(error, ATTESTATION_NOT_FOUND)) return undefined;
+    throw error;
+  }
+}
+
 const server = createServer(async (request, response) => {
+  const startedAt = performance.now();
+  const correlationId = requestId(request.headers["x-request-id"]);
+  response.setHeader("x-request-id", correlationId);
+  metrics.inFlight += 1;
+  response.once("finish", () => {
+    metrics.inFlight -= 1;
+    const durationMs = Math.round((performance.now() - startedAt) * 100) / 100;
+    metrics.record(response.statusCode, durationMs);
+    console.log(JSON.stringify({
+      level: response.statusCode >= 500 ? "error" : "info",
+      event: "http_request",
+      requestId: correlationId,
+      method: request.method,
+      path: new URL(request.url ?? "/", "http://localhost").pathname,
+      status: response.statusCode,
+      durationMs,
+    }));
+  });
   try {
     const url = new URL(request.url ?? "/", `http://${request.headers.host ?? "localhost"}`);
     if (request.method === "GET" && url.pathname === "/") {
@@ -92,30 +157,66 @@ const server = createServer(async (request, response) => {
       return;
     }
     if (request.method === "GET" && url.pathname === "/health") {
-      json(response, 200, {
-        ok: true,
+      const indexedThrough = index.getIndexedThrough();
+      let rpcOk = false;
+      let chainHead: number | undefined;
+      try {
+        chainHead = await withTimeout(provider.getBlockNumber(), RPC_TIMEOUT_MS);
+        lastChainHead = chainHead;
+        rpcOk = true;
+      } catch {
+        // Readiness fails closed without leaking upstream details.
+      }
+      const lagBlocks = indexedThrough === undefined || chainHead === undefined
+        ? null
+        : Math.max(chainHead - indexedThrough, 0);
+      const databaseOk = index.integrityCheck();
+      const ok = rpcOk && databaseOk && lagBlocks !== null && lagBlocks <= MAX_INDEX_LAG_BLOCKS;
+      json(response, ok ? 200 : 503, {
+        ok,
         chainId: "1874",
         registry: SOVA_REGISTRY_ADDRESS,
-        indexedThrough: index.getIndexedThrough() ?? null,
+        rpcOk,
+        databaseOk,
+        indexedThrough: indexedThrough ?? null,
+        chainHead: chainHead ?? null,
+        indexLagBlocks: lagBlocks,
+        maxIndexLagBlocks: MAX_INDEX_LAG_BLOCKS,
         eventCount: index.countEvents(),
       });
       return;
+    }
+    if (request.method === "GET" && url.pathname === "/metrics") {
+      text(response, 200, metrics.render(index.getIndexedThrough(), lastChainHead));
+      return;
+    }
+
+    if (url.pathname.startsWith("/v1/")) {
+      const decision = limiter.consume(request.socket.remoteAddress ?? "unknown");
+      response.setHeader("x-ratelimit-limit", String(RATE_LIMIT));
+      response.setHeader("x-ratelimit-remaining", String(decision.remaining));
+      if (!decision.allowed) {
+        response.setHeader("retry-after", String(decision.retryAfterSeconds));
+        json(response, 429, { error: "RATE_LIMITED" });
+        return;
+      }
     }
 
     const attestationMatch = url.pathname.match(/^\/v1\/attestations\/(0x[0-9a-fA-F]{64})$/);
     if (request.method === "GET" && attestationMatch !== null) {
       const attestationId = attestationMatch[1];
-      try {
-        json(response, 200, serializeAttestation(attestationId, await client.getAttestation(attestationId)));
-      } catch {
+      const attestation = await getAttestation(attestationId);
+      if (attestation === undefined) {
         json(response, 404, { error: "ATTESTATION_NOT_FOUND" });
+      } else {
+        json(response, 200, serializeAttestation(attestationId, attestation));
       }
       return;
     }
 
     const schemaMatch = url.pathname.match(/^\/v1\/schemas\/(0x[0-9a-fA-F]{64})$/);
     if (request.method === "GET" && schemaMatch !== null) {
-      const schema = await client.getSchema(schemaMatch[1]);
+      const schema = await withTimeout(client.getSchema(schemaMatch[1]), RPC_TIMEOUT_MS);
       if (!schema.exists) {
         json(response, 404, { error: "SCHEMA_NOT_FOUND" });
       } else {
@@ -130,7 +231,10 @@ const server = createServer(async (request, response) => {
       const discovered = index.getAttestationsBySubject(subjectMatch[1], limit);
       const attestations = await Promise.all(
         discovered.map(async ({ attestationId }) =>
-          serializeAttestation(attestationId, await client.getAttestation(attestationId))),
+          serializeAttestation(
+            attestationId,
+            await withTimeout(client.getAttestation(attestationId), RPC_TIMEOUT_MS),
+          )),
       );
       json(response, 200, { attestations });
       return;
@@ -154,8 +258,10 @@ const server = createServer(async (request, response) => {
         json(response, 400, { error: "INVALID_REQUEST" });
         return;
       }
-      try {
-        const attestation = await client.getAttestation(input.attestationId);
+      const attestation = await getAttestation(input.attestationId);
+      if (attestation === undefined) {
+        json(response, 404, { error: "ATTESTATION_NOT_FOUND" });
+      } else {
         json(response, 200, {
           matches: verifyDisclosure(
             attestation.dataHash,
@@ -164,8 +270,6 @@ const server = createServer(async (request, response) => {
             input.salt,
           ),
         });
-      } catch {
-        json(response, 404, { error: "ATTESTATION_NOT_FOUND" });
       }
       return;
     }
@@ -217,11 +321,15 @@ const server = createServer(async (request, response) => {
         && typeof disclosureInput.salt === "string" && bytes32Pattern.test(disclosureInput.salt)
           ? { encodedPayload: disclosureInput.encodedPayload, salt: disclosureInput.salt }
           : undefined;
-      const [attestation, block] = await Promise.all([
-        client.getAttestation(input.attestationId),
+      const [attestation, block] = await withTimeout(Promise.all([
+        getAttestation(input.attestationId),
         provider.getBlock("latest"),
-      ]);
+      ]), RPC_TIMEOUT_MS);
       if (block === null) throw new Error("Latest block unavailable");
+      if (attestation === undefined) {
+        json(response, 404, { error: "ATTESTATION_NOT_FOUND" });
+        return;
+      }
       const policy: ConsumerPolicy = {
         chainId: 1874n,
         registryAddress: SOVA_REGISTRY_ADDRESS,
@@ -241,12 +349,38 @@ const server = createServer(async (request, response) => {
     json(response, 404, { error: "NOT_FOUND" });
   } catch (error) {
     const message = error instanceof Error ? error.message : "UNKNOWN";
-    json(response, message === "REQUEST_TOO_LARGE" ? 413 : 503, { error: "SERVICE_UNAVAILABLE" });
+    if (message === "REQUEST_TOO_LARGE") {
+      json(response, 413, { error: "REQUEST_TOO_LARGE" });
+    } else if (error instanceof SyntaxError) {
+      json(response, 400, { error: "INVALID_JSON" });
+    } else {
+      json(response, 503, { error: "SERVICE_UNAVAILABLE" });
+    }
   }
 });
 
+server.requestTimeout = 15_000;
+server.headersTimeout = 10_000;
+server.keepAliveTimeout = 5_000;
 server.on("close", () => index.close());
 server.listen(PORT, HOST, () => {
   console.log(`sova_api=http://${HOST}:${PORT}`);
   console.log(`database=${DATABASE}`);
 });
+
+function shutdown(signal: string): void {
+  console.log(JSON.stringify({ level: "info", event: "shutdown", signal }));
+  server.close((error) => {
+    if (error !== undefined) {
+      console.error(JSON.stringify({ level: "error", event: "shutdown_failed" }));
+      process.exitCode = 1;
+    }
+  });
+  setTimeout(() => {
+    console.error(JSON.stringify({ level: "error", event: "shutdown_timeout" }));
+    process.exit(1);
+  }, 10_000).unref();
+}
+
+process.once("SIGINT", () => shutdown("SIGINT"));
+process.once("SIGTERM", () => shutdown("SIGTERM"));

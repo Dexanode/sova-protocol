@@ -29,11 +29,24 @@ npm run schema:status
 npm run issuer:status
 npm run pilot:status
 npm run indexer:sync
+npm run ops:check
 ```
 
 For security-sensitive decisions, read `getAttestationStatus` or `isUsable`
 directly from the registry. The indexer is discovery infrastructure, not the
 source of truth.
+
+Run `indexer:sync` before `ops:check`. A successful check requires the expected
+chain ID, deployed registry bytecode, active canonical schema, a healthy SQLite
+database, and index lag within the configured 100-block default. Treat any
+failed check as a testnet service-readiness failure; do not bypass it by raising
+the lag budget without recording and reviewing the reason.
+
+The API emits structured request completion logs and serves `/metrics` and
+`/health` on its loopback listener. Alert candidates for a hosted pilot are
+readiness `503`, increasing `sova_api_errors_total`, rate-limit bursts, and
+index lag approaching the configured maximum. Logs must never be augmented
+with request bodies, salts, private disclosures, or credentials.
 
 ## Governance procedure
 

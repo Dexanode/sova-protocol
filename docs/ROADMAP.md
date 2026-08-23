@@ -18,10 +18,11 @@
 - Phase 1.2 — persistent reorg-aware SQLite indexer and registry-refreshed query API completed
 - Phase 1.3 — isolated issuer EIP-712 signing and untrusted relayer submission validated on testnet
 - Phase 1.4 — testnet verification dashboard and explicit consumer-policy demo completed
+- Phase 1.5 — testnet pilot observability, API hardening, and operational validation completed
 
 ## Next
 
-- Phase 1.5 — testnet pilot observability, API hardening, and operational validation
+- Phase 1.6 — bounded external pilot packaging, feedback capture, and exit criteria
 
 ## Deferred production gate
 

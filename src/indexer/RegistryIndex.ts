@@ -128,6 +128,11 @@ export class RegistryIndex {
     return Number(row.count);
   }
 
+  integrityCheck(): boolean {
+    const row = this.#database.prepare("PRAGMA quick_check").get() as { quick_check: string };
+    return row.quick_check === "ok";
+  }
+
   getAttestationsBySubject(subjectId: string, limit = 50): IndexedAttestation[] {
     return this.#database.prepare(`
       SELECT

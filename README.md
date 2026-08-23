@@ -34,6 +34,7 @@ loopback-only query API:
 
 ```bash
 npm run indexer:sync
+npm run ops:check
 npm run api:start
 ```
 

@@ -27,6 +27,7 @@
     "pilot:revoke": "hardhat run scripts/pilot-revoke.ts --network whitechainIssuer",
     "indexer:sync": "tsx scripts/indexer-sync.ts",
     "api:start": "tsx scripts/api-server.ts",
+    "ops:check": "tsx scripts/ops-check.ts",
     "relay:prepare": "tsx scripts/relay-prepare.ts",
     "issuer:sign-relay": "hardhat run scripts/issuer-sign-relay.ts --network whitechainIssuer",
     "relay:submit": "hardhat run scripts/relay-submit.ts --network whitechainSepolia",

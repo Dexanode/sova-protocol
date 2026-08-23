@@ -8,9 +8,15 @@ servers:
 paths:
   /health:
     get:
-      summary: Read service and index checkpoint health
+      summary: Read RPC, SQLite integrity, and index-lag readiness
       responses:
         '200': { description: Service health }
+        '503': { description: RPC unavailable, database unhealthy, or index beyond the configured lag budget }
+  /metrics:
+    get:
+      summary: Read bounded Prometheus service and index-lag metrics
+      responses:
+        '200': { description: Prometheus text exposition }
   /v1/subjects/{subjectId}/attestations:
     get:
       summary: Discover subject attestations from the index and refresh lifecycle from the registry
@@ -24,6 +30,7 @@ paths:
           schema: { type: integer, minimum: 1, maximum: 100, default: 50 }
       responses:
         '200': { description: Registry-refreshed attestation list }
+        '429': { description: Per-client testnet rate limit exceeded }
         '503': { description: Authoritative RPC unavailable }
   /v1/attestations/{attestationId}:
     get:
@@ -40,6 +47,7 @@ paths:
             application/json:
               schema: { $ref: '#/components/schemas/AttestationView' }
         '404': { description: Attestation not found }
+        '429': { description: Per-client testnet rate limit exceeded }
         '503': { description: Authoritative RPC unavailable }
   /v1/schemas/{schemaId}:
     get:
@@ -52,6 +60,7 @@ paths:
       responses:
         '200': { description: Schema view }
         '404': { description: Schema not found }
+        '429': { description: Per-client testnet rate limit exceeded }
         '503': { description: Authoritative RPC unavailable }
   /v1/verify-disclosure:
     post:
@@ -79,6 +88,7 @@ paths:
                 properties: { matches: { type: boolean } }
         '400': { description: Invalid request encoding }
         '404': { description: Attestation not found }
+        '429': { description: Per-client testnet rate limit exceeded }
         '503': { description: Authoritative RPC unavailable }
   /v1/evaluate:
     post:
@@ -115,6 +125,7 @@ paths:
           description: Explicit policy decision and machine-readable rejection reasons
         '400': { description: Invalid request or policy }
         '404': { description: Attestation not found }
+        '429': { description: Per-client testnet rate limit exceeded }
         '503': { description: Authoritative RPC unavailable }
 components:
   schemas:

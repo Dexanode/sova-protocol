@@ -54,6 +54,7 @@ describe("RegistryIndex", function () {
 
     expect(index.getIndexedThrough()).to.equal(4);
     expect(index.countEvents()).to.equal(4);
+    expect(index.integrityCheck()).to.equal(true);
     const [attestation] = index.getAttestationsBySubject(SUBJECT);
     expect(attestation?.attestationId).to.equal(ATTESTATION);
     expect(attestation?.revokedAt).to.equal("15");
