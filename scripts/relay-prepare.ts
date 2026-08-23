@@ -22,10 +22,14 @@ if (existsSync(REQUEST_FILE) || existsSync(DISCLOSURE_FILE)) {
 }
 const rpc = process.env.WHITECHAIN_SEPOLIA_RPC_URL ?? "https://rpc.testnet.whitechain.io";
 const provider = new JsonRpcProvider(rpc, 1874, { staticNetwork: true });
+const validityDays = Number(process.argv[2] ?? process.env.SOVA_RELAY_VALIDITY_DAYS ?? "7");
+if (!Number.isInteger(validityDays) || validityDays < 1 || validityDays > 90) {
+  throw new Error("SOVA_RELAY_VALIDITY_DAYS must be an integer from 1 to 90");
+}
 const block = await provider.getBlock("latest");
 if (block === null) throw new Error("Latest block unavailable");
 const issuedAt = BigInt(block.timestamp);
-const expiresAt = issuedAt + 7n * 24n * 60n * 60n;
+const expiresAt = issuedAt + BigInt(validityDays) * 24n * 60n * 60n;
 const deadline = issuedAt + 15n * 60n;
 const nonce = hexlify(randomBytes(32));
 const salt = hexlify(randomBytes(32));
@@ -66,5 +70,6 @@ writeFileSync(DISCLOSURE_FILE, `${JSON.stringify(disclosure, null, 2)}\n`, { fla
 console.log(`attestation_id=${attestationId}`);
 console.log(`issued_at=${issuedAt}`);
 console.log(`deadline=${deadline}`);
+console.log(`validity_days=${validityDays}`);
 console.log(`request=${REQUEST_FILE}`);
 console.log(`disclosure=${DISCLOSURE_FILE}`);

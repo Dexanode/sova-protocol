@@ -7,6 +7,7 @@
 - [ ] Run `npm run indexer:sync` and `npm run ops:check` successfully.
 - [ ] Confirm dashboard and API remain testnet-labelled and loopback/reviewed-proxy only.
 - [ ] Prepare synthetic attestation/disclosure fixtures and pseudonymous session IDs.
+- [ ] Confirm the active fixture expiry covers the complete pilot window.
 - [ ] Explain prohibited data, voluntary participation, stop conditions, and retention.
 
 ## Every session

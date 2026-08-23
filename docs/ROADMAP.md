@@ -21,9 +21,16 @@
 - Phase 1.5 — testnet pilot observability, API hardening, and operational validation completed
 - Phase 1.6 — bounded external pilot package, privacy-preserving feedback capture, and exit criteria completed
 
-## Next
+## In progress
 
 - Phase 1.7 — execute the bounded testnet pilot and record evidence-backed exit decision
+
+Current gate: pilot window opened; participant sessions remain blocked until a
+fresh synthetic attestation covers the full window.
+
+## Next
+
+- Determined by the Phase 1.7 `PASS`, `ITERATE`, or `STOP` decision
 
 ## Deferred production gate
 
